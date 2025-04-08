@@ -27,7 +27,7 @@ You will need a MailChimp account and an API key. [Read about API keys here](htt
 **A:** No, it's for MailChimp. I might vibe-code a Mailerlite version at some point.
 
 **Q: Why didn't you use Camel casing in your code (i.e. SignupChimp)**  
-**A:** Because Camel casing won't work with Joomla's com_ajax component. It dynamically creates the name of the ajax function that you're calling based on the module name, com_ajax fails to find your helper file if you use camel casing. It took me days to figure that out.
+**A:** Because Camel casing won't work with Joomla's com_ajax component. Since com_ajax dynamically creates the name of the ajax function that you're calling based on the module name, it fails to find your helper file if you use camel casing. It took me days to figure that out.
 
 **Q: This plugin is awesome! Can I send a donation?**  
 **A:** Sure! Send your cryptonation to the following wallets:
