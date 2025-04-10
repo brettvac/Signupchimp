@@ -57,7 +57,6 @@ class Dispatcher implements DispatcherInterface, HelperFactoryAwareInterface
       $redirectAfterSubscribe = $params->get('redirectaftersubscribe', 0); 
       
       //Get the redirection after subscription options
-      $mymenuID = $params->get('menuitemaftersubscribe', '');
       $menuItemId = $params->get('menuitemaftersubscribe', '');
       $redirectDelay = $params->get('redirectdelay', '');
       
