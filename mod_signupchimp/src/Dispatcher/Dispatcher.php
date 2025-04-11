@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.0
+ * @version    1.1
  * @copyright  (C) 2025 Brett Vachon
  * @license    GNU General Public License version 2
  */
@@ -21,63 +21,53 @@ use Joomla\CMS\Helper\HelperFactoryAwareInterface;
 use Joomla\CMS\Helper\HelperFactoryAwareTrait;
 
 class Dispatcher implements DispatcherInterface, HelperFactoryAwareInterface
-  {
-  use HelperFactoryAwareTrait;
+{
+    use HelperFactoryAwareTrait;
 
-  protected $module;
-  protected $app;
+    protected $module;
+    protected $app;
 
-  public function __construct(\stdClass $module, CMSApplicationInterface $app, Input $input)
+    public function __construct(\stdClass $module, CMSApplicationInterface $app, Input $input)
     {
-    $this->module = $module;
-    $this->app = $app;
+        $this->module = $module;
+        $this->app = $app;
     }
 
     public function dispatch()
-      {
-      // Process language constants   
-      $language = $this->app->getLanguage();
-      $language->load('mod_signupchimp', JPATH_BASE . '/modules/mod_signupchimp'); 
- 
-      $emailPlaceholder = Text::_('MOD_SIGNUPCHIMP_EMAIL_PLACEHOLDER');
-      $fnamePlaceholder = Text::_('MOD_SIGNUPCHIMP_FIRST_NAME_PLACEHOLDER');
-      $noApiKeyErrMsg = Text::_('MOD_SIGNUPCHIMP_ERROR_NO_API_KEY');
-      $noListErrMsg = Text::_('MOD_SIGNUPCHIMP_ERROR_NO_LIST');
-      $successMsg = Text::_('MOD_SIGNUPCHIMP_MESSAGE_SUCCESS');
-      
-      //Process the basic parameters from the configuration file
-      $params = new Registry($this->module->params);
-      
-      $apiKey = $params->get('apikey', '');
-      $listID = $params->get('listid', ''); 
-      $tagsInput = $params->get('tags', '');
-      $buttonText = $params->get('button', '');
-      
-      // Find out if we want to redirect after successful subscription
-      $redirectAfterSubscribe = $params->get('redirectaftersubscribe', 0); 
-      
-      //Get the redirection after subscription options
-      $menuItemId = $params->get('menuitemaftersubscribe', '');
-      $redirectDelay = $params->get('redirectdelay', '');
-      
-      //Process the advanced parameters
-      $emailClass = $params->get('emailclass', '');
-      $fnameClass = $params->get('fnameclass', '');
-      $gdprClass = $params->get('gdprclass', '');
-      $btnClass = $params->get('btnclass', '');
-      $successmsgClass = $params->get('successmsgclass', '');
-      $failuremsgClass = $params->get('failuremsgclass', '');
+    {
+        // Load language file for front-end rendering
+        $language = $this->app->getLanguage();
+        $language->load('mod_signupchimp', JPATH_BASE . '/modules/mod_signupchimp');
 
-      //Store the parameters in the session for the helper file
-      $session = Factory::getApplication()->getSession();
-      $session->set('api_key', $apiKey, 'mod_signupchimp');
-      $session->set('list_id', $listID, 'mod_signupchimp');
-      $session->set('tags_input', $tagsInput, 'mod_signupchimp');
-      $session->set('no_api_key_err_msg', $noApiKeyErrMsg, 'mod_signupchimp');
-      $session->set('no_list_err_msg', $noListErrMsg, 'mod_signupchimp');
-      $session->set('success_msg', $successMsg, 'mod_signupchimp');
+        // Load only template-related language strings
+        $emailPlaceholder = Text::_('MOD_SIGNUPCHIMP_EMAIL_PLACEHOLDER');
+        $fnamePlaceholder = Text::_('MOD_SIGNUPCHIMP_FIRST_NAME_PLACEHOLDER');
+        $gdprText = Text::_('MOD_SIGNUPCHIMP_GDPR_TEXT');
+        $emailLabel = Text::_('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS');
+        $fnameLabel = Text::_('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME');
 
-      require ModuleHelper::getLayoutPath('mod_signupchimp');
-      }
-   
-   }
+        // Process module parameters
+        $params = new Registry($this->module->params);
+
+        //$apiKey = $params->get('apikey', '');
+        //$listID = $params->get('listid', '');
+        //$tagsInput = $params->get('tags', '');
+        $buttonText = $params->get('button', '');
+
+        // Redirect settings
+        $redirectAfterSubscribe = $params->get('redirectaftersubscribe', 0);
+        $menuItemId = $params->get('menuitemaftersubscribe', '');
+        $redirectDelay = $params->get('redirectdelay', '');
+
+        // Advanced parameters
+        $emailClass = $params->get('emailclass', '');
+        $fnameClass = $params->get('fnameclass', '');
+        $gdprClass = $params->get('gdprclass', '');
+        $btnClass = $params->get('btnclass', '');
+        $successmsgClass = $params->get('successmsgclass', '');
+        $failuremsgClass = $params->get('failuremsgclass', '');
+
+        // Render the module layout
+        require ModuleHelper::getLayoutPath('mod_signupchimp');
+    }
+}
