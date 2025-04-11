@@ -2,7 +2,7 @@
 <extension type="module" client="site" method="upgrade">
     <name>MOD_SIGNUPCHIMP</name>
     <element>mod_signupchimp</element>
-    <version>1.0</version>
+    <version>1.1</version>
     <description>MOD_SIGNUPCHIMP_DESC</description>
     <author>Brett Vachon</author>
     <authorUrl>http://naftee.com</authorUrl>
