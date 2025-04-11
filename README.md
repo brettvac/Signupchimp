@@ -7,7 +7,7 @@ Are you are interested in building a list and marketing your products? The first
 This is your first step to turning a sedentary website visitor into a raving Chimp who will lap up your grand slam offers.
 
 ## How To Use Sign Up Chimp
-1. Install the module via the Joomla! Extensions Manager. You can install via URL by using this URL:  [https://github.com/brettvac/signupchimp/releases/download/1.0/signupchimp.zip](https://github.com/brettvac/signupchimp/releases/download/1.0/signupchimp.zip)  
+1. Install the module via the Joomla! Extensions Manager. You can install via URL by using this URL:  [https://github.com/brettvac/signupchimp/releases/download/1.1/mod_signupchimp.zip](https://github.com/brettvac/signupchimp/releases/download/1.1/signupchimp.zip)  
 2. Navigate to Extensions > Modules and find "Sign Up Chimp".
 3. Configure the module settings, including MailChimp API key and list ID. If you want to display a tripwire offer, set the menu item and the delay before redirect.
 4. Publish the module in your desired position. Users can now enter their email and first name to subscribe directly from your website.
@@ -42,3 +42,6 @@ You will need a MailChimp account and an API key. [Read about API keys here](htt
 ## Credits
 - **MailChimp API v3 wrapper** by [Drew McLellan](https://github.com/drewm) (MIT License)
 
+## Versions
+**1.0** Initial release
+**1.1** Fix page not found error & reliance on session variables
