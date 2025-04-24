@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.1
+ * @version    1.2
  * @copyright  (C) 2025 Brett Vachon
  * @license    GNU General Public License version 2
  */
@@ -31,7 +31,8 @@ $baseUri = Uri::base();
 ?>
 
 <script>
-function handleFormSubmit<?php echo $moduleId; ?>(form) {
+function handleFormSubmit<?php echo $moduleId; ?>(form) 
+  {
     // Get moduleId from the form's data attribute
     const moduleId = form.getAttribute('data-module-id');
 
@@ -76,18 +77,18 @@ function handleFormSubmit<?php echo $moduleId; ?>(form) {
     });
 
     return false; // Prevent traditional form submission
-}
+  }
 </script>
 
 <div id="sc_result<?php echo $moduleId; ?>"></div>
 <form name="signupchimp" id="sc_form<?php echo $moduleId; ?>" data-module-id="<?php echo $moduleId; ?>" onsubmit="return handleFormSubmit<?php echo $moduleId; ?>(this)">
     <div id="sc_email<?php echo $moduleId; ?>">
-        <label for="email"><?php echo Text::_('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS'); ?></label>
-        <input type="email" name="email" class="<?php echo $emailClass; ?>" placeholder="<?php echo $emailPlaceholder; ?>" required>
+        <label for="email<?php echo $moduleId; ?>"><?php echo Text::_('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS'); ?></label>
+        <input type="email" name="email" id="email<?php echo $moduleId; ?>" class="<?php echo $emailClass; ?>" placeholder="<?php echo $emailPlaceholder; ?>" required>
     </div>
     <div id="sc_fname<?php echo $moduleId; ?>">
-        <label for="fname"><?php echo Text::_('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME'); ?></label>
-        <input type="text" name="fname" class="<?php echo $fnameClass; ?>" placeholder="<?php echo $fnamePlaceholder; ?>">
+        <label for="fname<?php echo $moduleId; ?>"><?php echo Text::_('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME'); ?></label>
+        <input type="text" name="fname" id="fname<?php echo $moduleId; ?>" class="<?php echo $fnameClass; ?>" placeholder="<?php echo $fnamePlaceholder; ?>">
     </div>
     <div id="sc_gdpr<?php echo $moduleId; ?>" class="<?php echo $gdprClass; ?>">
         <?php echo Text::_('MOD_SIGNUPCHIMP_GDPR_TEXT'); ?>
