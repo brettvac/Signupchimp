@@ -1,8 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.2
- * @copyright  (C) 2025 Brett Vachon
+ * @version    1.3
  * @license    GNU General Public License version 2
  */
 
@@ -49,9 +48,6 @@ class Dispatcher implements DispatcherInterface, HelperFactoryAwareInterface
         // Process module parameters
         $params = new Registry($this->module->params);
 
-        //$apiKey = $params->get('apikey', '');
-        //$listID = $params->get('listid', '');
-        //$tagsInput = $params->get('tags', '');
         $buttonText = $params->get('button', '');
 
         // Redirect settings

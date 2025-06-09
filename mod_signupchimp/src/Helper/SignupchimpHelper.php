@@ -1,8 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.2
- * @copyright  (C) 2025 Brett Vachon
+ * @version    1.3
  * @license    GNU General Public License version 2
  */
 

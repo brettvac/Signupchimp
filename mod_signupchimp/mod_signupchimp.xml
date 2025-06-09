@@ -2,7 +2,7 @@
 <extension type="module" client="site" method="upgrade">
     <name>MOD_SIGNUPCHIMP</name>
     <element>mod_signupchimp</element>
-    <version>1.2</version>
+    <version>1.3</version>
     <description>MOD_SIGNUPCHIMP_DESC</description>
     <author>Brett Vachon</author>
     <authorUrl>http://naftee.com</authorUrl>
@@ -63,6 +63,6 @@
   </config>
   <updateservers>
     <server type="extension" name="Sign Up Chimp Updates">https://raw.githubusercontent.com/brettvac/signupchimp/refs/heads/main/update/updates.xml</server>
-</updateservers>
+  </updateservers>
 
 </extension>

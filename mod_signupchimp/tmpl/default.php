@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.2
+ * @version    1.3
  * @copyright  (C) 2025 Brett Vachon
  * @license    GNU General Public License version 2
  */
@@ -52,10 +52,23 @@ function handleFormSubmit<?php echo $moduleId; ?>(form)
         method: 'POST',
         data: data,
         processData: false,
-        onSuccess: function(data) {
+        onSuccess: function(data) 
+           {
             const response = JSON.parse(data);
-            document.getElementById('sc_result' + moduleId).innerHTML = '<div class="<?php echo $successmsgClass; ?>" role="alert">' + response.data + '</div>';
+            
+            //Display the success message after adding to the list
+            const scResultDiv = document.getElementById('sc_result' + <?php echo $moduleId; ?>);
+            while (scResultDiv.firstChild) {
+              scResultDiv.removeChild(scResultDiv.firstChild);
+            }
 
+           const divElement = document.createElement('div');
+           divElement.setAttribute('class', '<?php echo $successmsgClass; ?>');
+           divElement.setAttribute('role', 'alert');
+           divElement.appendChild(document.createTextNode(response.data)); // Use response.data for success message
+
+           scResultDiv.appendChild(divElement);
+            
             // Handle redirect if enabled
             const redirectAfterSubscribe = <?php echo (int) $redirectAfterSubscribe; ?>;
             if (redirectAfterSubscribe == 1) {
@@ -70,14 +83,29 @@ function handleFormSubmit<?php echo $moduleId; ?>(form)
                 }
             }
         },
-        onError: function(xhr) {
-            const response = JSON.parse(xhr.response);
-            document.getElementById('sc_result' + moduleId).innerHTML = '<div class="<?php echo $failuremsgClass; ?>" role="alert">' + response.message + '</div>';
-        }
-    });
+        onError: function(xhr) 
+           {
+           // Get the error message, including from MC  
+           const response = JSON.parse(xhr.response);
+           const scResultDiv = document.getElementById('sc_result' + <?php echo $moduleId; ?>);
 
-    return false; // Prevent traditional form submission
-  }
+           // Clear any existing content in sc_resultDiv before appending new content
+           while (scResultDiv.firstChild) {
+               scResultDiv.removeChild(scResultDiv.firstChild);
+               }
+
+          const divElement = document.createElement('div');
+          divElement.setAttribute('class', '<?php echo $failuremsgClass; ?>');
+          divElement.setAttribute('role', 'alert');
+          divElement.appendChild(document.createTextNode(response.message));
+
+          scResultDiv.appendChild(divElement);
+          }   
+    
+      });
+
+      return false; // Prevent traditional form submission
+    }
 </script>
 
 <div id="sc_result<?php echo $moduleId; ?>"></div>
