@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.3
+ * @version    1.4
  * @license    GNU General Public License version 2
  */
 
@@ -34,6 +34,12 @@ class SignupchimpHelper
         return $this->MChimp->success();
     }
 
+    /**
+     * Subscribe a new user to the MailChimp audience.
+     *
+     * @return string The success message on successful subscription
+     * @throws \Exception If the API request fails
+     */
     protected function subscribeUser()
     {
         $data = [
@@ -47,22 +53,50 @@ class SignupchimpHelper
 
         if ($this->MChimp->success())
         {
-            return $this->successMsg;
+           
+            return $this->successMsg;    
         }
 
         throw new \Exception($this->MChimp->getLastError());
     }
 
+    /**
+     * Update an existing MailChimp subscriber with new data.
+     *
+     * @return string The success message on successful update
+     * @throws \Exception If the API request fails or the subscriber cannot be retrieved
+     */
     protected function updateUser()
     {
-        $subscriberHash = $this->MChimp->subscriberHash($this->emailAddress);
+        $subscriberHash = $this->MChimp::subscriberHash($this->emailAddress);
 
+        // Get the current user
+        $current = $this->MChimp->get("lists/{$this->listID}/members/{$subscriberHash}");
+
+        // Initialize array with first names and tags
         $data = [
             'merge_fields' => ['FNAME' => $this->fname],
-            'tags' => $this->tags,
-            'status' => 'pending'
+            'tags' => $this->tags
         ];
 
+        // Determine the status to set based on existing status
+        switch ($current['status'] ?? '') {
+            case 'subscribed':
+            case 'cleaned':
+                // Keep the same status for subscribed or cleaned users
+                break;
+            case 'unsubscribed':
+            case 'pending':
+                // Set status to pending for unsubscribed or pending users
+                $data['status'] = 'pending';
+                break;
+            default:
+                // Default case: set status to subscribed if no status previously set
+                $data['status'] = 'subscribed';
+                break;
+        }
+
+        //Update the user (with new status if set)
         $result = $this->MChimp->patch("lists/{$this->listID}/members/{$subscriberHash}", $data);
 
         if ($this->MChimp->success())
