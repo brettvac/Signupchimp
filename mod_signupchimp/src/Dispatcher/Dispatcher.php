@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.4
+ * @version    1.5
  * @license    GNU General Public License version 2
  */
 
@@ -36,7 +36,7 @@ class Dispatcher implements DispatcherInterface, HelperFactoryAwareInterface
     {
         // Load language file for front-end rendering
         $language = $this->app->getLanguage();
-        $language->load('mod_signupchimp', JPATH_BASE . '/modules/mod_signupchimp');
+        $language->load('mod_signupchimp', JPATH_SITE);
 
         // Load only template-related language strings
         $emailPlaceholder = Text::_('MOD_SIGNUPCHIMP_EMAIL_PLACEHOLDER');

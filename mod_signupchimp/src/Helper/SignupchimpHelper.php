@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.4
+ * @version    1.5
  * @license    GNU General Public License version 2
  */
 
@@ -14,6 +14,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\Registry\Registry;
 use DrewM\MailChimp\MailChimp;
+use Joomla\CMS\Log\Log;
 
 require_once __DIR__ . '/../../lib/MailChimp.php';
 
@@ -26,16 +27,26 @@ class SignupchimpHelper
     private $tags;
     private $successMsg;
 
+    /**
+     * Checks if the current email address already exists in the MailChimp audience list.
+     *
+     * @return  bool  True if the email is already subscribed, false otherwise
+     */
     protected function checkEmailExists()
     {
         $subscriberHash = $this->MChimp::subscriberHash($this->emailAddress);
         $result = $this->MChimp->get("lists/{$this->listID}/members/{$subscriberHash}");
-
+        
+        if (!$this->MChimp->success() && defined('JDEBUG') && JDEBUG)
+          {
+          Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+          }
+          
         return $this->MChimp->success();
     }
 
     /**
-     * Subscribe a new user to the MailChimp audience.
+     * Subscribe a new contact to the MailChimp audience.
      *
      * @return string The success message on successful subscription
      * @throws \Exception If the API request fails
@@ -53,9 +64,13 @@ class SignupchimpHelper
 
         if ($this->MChimp->success())
         {
-           
-            return $this->successMsg;    
+          return $this->successMsg;    
         }
+        
+        if (defined('JDEBUG') && JDEBUG)
+          {
+          Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+          }
 
         throw new \Exception($this->MChimp->getLastError());
     }
@@ -72,6 +87,11 @@ class SignupchimpHelper
 
         // Get the current user
         $current = $this->MChimp->get("lists/{$this->listID}/members/{$subscriberHash}");
+        
+        if (!$this->MChimp->success() && defined('JDEBUG') && JDEBUG)
+          {
+          Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+          }
 
         // Initialize array with first names and tags
         $data = [
@@ -79,19 +99,19 @@ class SignupchimpHelper
             'tags' => $this->tags
         ];
 
-        // Determine the status to set based on existing status
+        // Determine the contact status to set based on existing status
         switch ($current['status'] ?? '') {
             case 'subscribed':
             case 'cleaned':
-                // Keep the same status for subscribed or cleaned users
+            case 'pending':
+                // Keep the same status for subscribed, cleaned or pending contacts
                 break;
             case 'unsubscribed':
-            case 'pending':
-                // Set status to pending for unsubscribed or pending users
+                // Set status to pending for unsubscribed contacts
                 $data['status'] = 'pending';
                 break;
             default:
-                // Default case: set status to subscribed if no status previously set
+                // Set contact status to subscribed if no status previously set
                 $data['status'] = 'subscribed';
                 break;
         }
@@ -104,6 +124,11 @@ class SignupchimpHelper
             return $this->successMsg;
         }
 
+        //Log and display the error message upon failure
+        if (defined('JDEBUG') && JDEBUG)
+          {
+          Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+          }
         throw new \Exception($this->MChimp->getLastError());
     }
 
@@ -129,9 +154,14 @@ class SignupchimpHelper
         return new Registry($module->params);
     }
 
+    /**
+     * Handles AJAX requests for the module via com_ajax
+     *
+     * @return  string  Success message (JSON-encoded)
+     * @throws  \Exception  On validation, API, or processing errors
+     */
     public function signupAjax()
     {
-      
         // Get the submitted form values (retrieved as POST data)
         $input = Factory::getApplication()->getInput();
 
@@ -151,7 +181,7 @@ class SignupchimpHelper
         // Load language file
         $app = Factory::getApplication('site');
         $language = $app->getLanguage();
-        $language->load('mod_signupchimp', JPATH_BASE . '/modules/mod_signupchimp');
+        $language->load('mod_signupchimp', JPATH_SITE);
 
         // Get language strings
         $this->successMsg = Text::_('MOD_SIGNUPCHIMP_MESSAGE_SUCCESS');
@@ -168,7 +198,18 @@ class SignupchimpHelper
         }
 
         // Initialize MailChimp
-        $this->MChimp = new \DrewM\MailChimp\MailChimp($apiKey);
+        try
+          {
+          $this->MChimp = new \DrewM\MailChimp\MailChimp($apiKey);
+          }
+        catch (\Exception $e)
+          {         
+          if (defined('JDEBUG') && JDEBUG)
+            {
+            Log::add($e->getMessage(), Log::DEBUG, 'mod_signupchimp');
+            }
+          throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED'));
+          }
 
         // Get form input
         $this->emailAddress = urldecode($input->get('email', '', 'RAW'));
@@ -189,16 +230,14 @@ class SignupchimpHelper
             }
         }
 
-        // Check if email exists
-        $status = $this->checkEmailExists();
-
-        if (!$status)
+        // Check if email exists as a contact
+        if (!$this->checkEmailExists())
         {
             // User not found: subscribe new user
             return $this->subscribeUser();
         }
 
-        // Existing user (subscribed, unsubscribed, pending, etc.) — update & trigger opt-in
+        // Existing contact (subscribed, unsubscribed, pending, etc.) update
         return $this->updateUser();
     }
 }

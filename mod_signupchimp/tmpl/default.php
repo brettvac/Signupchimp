@@ -1,8 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.4
- * @copyright  (C) 2025 Brett Vachon
+ * @version    1.5
  * @license    GNU General Public License version 2
  */
 
@@ -19,9 +18,6 @@ $wa->useScript('core');
 
 // Load language constants
 Text::script('MOD_SIGNUPCHIMP_MESSAGE_ADDING');
-Text::script('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS');
-Text::script('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME');
-Text::script('MOD_SIGNUPCHIMP_GDPR_TEXT');
 
 // Get the current module ID
 $moduleId = $this->module->id;
@@ -33,34 +29,36 @@ $baseUri = Uri::base();
 <script>
 function handleFormSubmit<?php echo $moduleId; ?>(form) 
   {
-    // Get moduleId from the form's data attribute
-    const moduleId = form.getAttribute('data-module-id');
+  // Get moduleId from the form's data attribute
+  const moduleId = form.getAttribute('data-module-id');
 
-    // Display "adding to list" message
-    document.getElementById('sc_result' + moduleId).innerHTML = Joomla.Text._('MOD_SIGNUPCHIMP_MESSAGE_ADDING') + '<br>';
+  // Display "adding to list" message
+  document.getElementById('sc_result' + moduleId).innerHTML = Joomla.Text._('MOD_SIGNUPCHIMP_MESSAGE_ADDING') + '<br>';
 
-    // Get form data
-    const data = new URLSearchParams({
-        email: form.querySelector('[name="email"]').value,
-        fname: form.querySelector('[name="fname"]').value,
-        moduleId: moduleId
-    }).toString();
+  // Get form data
+  const data = new URLSearchParams({
+      email: form.querySelector('[name="email"]').value,
+      fname: form.querySelector('[name="fname"]').value,
+      moduleId: moduleId
+  }).toString();
 
-    // Send AJAX request
-    Joomla.request({
-        url: '<?php echo $baseUri; ?>index.php?option=com_ajax&module=signupchimp&method=signup&format=json',
-        method: 'POST',
-        data: data,
-        processData: false,
-        onSuccess: function(data) 
-           {
-            const response = JSON.parse(data);
+  // Send AJAX request
+  Joomla.request(
+      {
+      url: '<?php echo $baseUri; ?>index.php?option=com_ajax&module=signupchimp&method=signup&format=json',
+      method: 'POST',
+      data: data,
+      processData: false,
+      onSuccess: function(data) 
+         {
+         const response = JSON.parse(data);
             
-            //Display the success message after adding to the list
-            const scResultDiv = document.getElementById('sc_result' + <?php echo $moduleId; ?>);
-            while (scResultDiv.firstChild) {
-              scResultDiv.removeChild(scResultDiv.firstChild);
-            }
+         //Display the success message after adding to the list
+         const scResultDiv = document.getElementById('sc_result' + <?php echo $moduleId; ?>);
+         while (scResultDiv.firstChild) 
+           {
+           scResultDiv.removeChild(scResultDiv.firstChild);
+           }
 
            const divElement = document.createElement('div');
            divElement.setAttribute('class', '<?php echo $successmsgClass; ?>');
@@ -111,17 +109,15 @@ function handleFormSubmit<?php echo $moduleId; ?>(form)
 <div id="sc_result<?php echo $moduleId; ?>"></div>
 <form name="signupchimp" id="sc_form<?php echo $moduleId; ?>" data-module-id="<?php echo $moduleId; ?>" onsubmit="return handleFormSubmit<?php echo $moduleId; ?>(this)">
     <div id="sc_email<?php echo $moduleId; ?>">
-        <label for="email<?php echo $moduleId; ?>"><?php echo Text::_('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS'); ?></label>
+        <label for="email<?php echo $moduleId; ?>"><?php echo $emailLabel; ?></label>
         <input type="email" name="email" id="email<?php echo $moduleId; ?>" class="<?php echo $emailClass; ?>" placeholder="<?php echo $emailPlaceholder; ?>" required>
     </div>
     <div id="sc_fname<?php echo $moduleId; ?>">
-        <label for="fname<?php echo $moduleId; ?>"><?php echo Text::_('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME'); ?></label>
+        <label for="fname<?php echo $moduleId; ?>"><?php echo $fnameLabel; ?></label>
         <input type="text" name="fname" id="fname<?php echo $moduleId; ?>" class="<?php echo $fnameClass; ?>" placeholder="<?php echo $fnamePlaceholder; ?>">
     </div>
     <div id="sc_gdpr<?php echo $moduleId; ?>" class="<?php echo $gdprClass; ?>">
-        <?php echo Text::_('MOD_SIGNUPCHIMP_GDPR_TEXT'); ?>
+        <?php echo $gdprText; ?>
     </div>
-    <div id="sc_btn<?php echo $moduleId; ?>" class="<?php echo $btnClass; ?>">
-        <button type="submit" class="btn" id="sc_button<?php echo $moduleId; ?>"><?php echo $buttonText; ?></button>
-    </div>
+    <button type="submit" class="<?php echo $btnClass; ?>" id="sc_button<?php echo $moduleId; ?>"><?php echo $buttonText; ?></button>
 </form>
