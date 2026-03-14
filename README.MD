@@ -23,8 +23,8 @@ You can also publish multiple Sign Up Chimp modules on the same page, for exampl
 The Sign Up Chimp module works with Joomla! versions greater than 4.4 and requires PHP 7.2.5 or later. You will also need a MailChimp account and an API key. [Read about API keys here](https://mailchimp.com/help/about-api-keys/)
 
 ## FAQ
-**Q:Can I use this plugin with Mailerlite?**  
-**A:** No, it's for MailChimp. I might vibe-code a Mailerlite version at some point.
+**Q:Can I use this module with Mailerlite?**  
+**A:** No, Sign Up Chimp is designed solely for use with MailChimp.
 
 **Q: Why didn't you use Camel casing in your namespace code (i.e. SignupChimp)**  
 **A:** Because Camel casing won't work with Joomla's com_ajax component. Annoyingly enough, [com_ajax](https://manual.joomla.org/docs/4.4/general-concepts/javascript/com-ajax/) dynamically creates the name of the ajax function that you're calling based on the module name. Therefore, com_ajax fails to find your helper file if you use camel casing in your namespace. It took me days to figure that out.
