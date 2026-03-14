@@ -16,8 +16,8 @@ Sign Up Chimp is your first step to turning a sedentary website visitor who stum
 You can also publish multiple Sign Up Chimp modules on the same page, for example in the top or bottom positions of your template.
 
 ## Sign Up Chimp Features
-- **AJAX Signup** Uses an AJAX-powered form to send data to MailChimp without reloading the page. 
-- **Custom CSS Classes** Stylize your form to your heart's content by adding classes to the form elements
+- **AJAX Signup**. Sign Up Chimp uses an AJAX-powered form to send data to MailChimp without reloading the page, allowing your user to stay on the page after submitting the form. 
+- **Custom CSS Classes**. You can stylize your form to your heart's content by adding classes to the form elements directly in the module configuration.
 
 ## Sign Up Chimp Requirements
 The Sign Up Chimp module works with Joomla! versions greater than 4.4 and requires PHP 7.2.5 or later. You will also need a MailChimp account and an API key. [Read about API keys here](https://mailchimp.com/help/about-api-keys/)
