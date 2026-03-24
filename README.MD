@@ -12,17 +12,21 @@ Sign Up Chimp is your first step to turning a sedentary website visitor who stum
 ## How To Use Sign Up Chimp
 1. Install the module via the Joomla! Extensions Manager. You can install via URL by using this URL: [https://github.com/brettvac/signupchimp/releases/latest/download/mod_signupchimp.zip](https://github.com/brettvac/signupchimp/releases/latest/download/mod_signupchimp.zip)  
 2. Navigate to Content > Site Modules (or just click the modules button from the dashboard) to start editing the Sign Up Chimp module.
-3. Configure the module settings, including MailChimp API key. The list field will populate automatically. If you want to display a tripwire offer, set the menu item and the delay before redirect.
-4. Publish the module in your desired position. Users can now enter their email and first name to subscribe to your list directly from your website.
+3. Configure the module settings, starting with your MailChimp API key. The list field will populate automatically when you save the module. 
+4. If you want to display a tripwire offer, set the menu item and the delay before redirect option will appear.
+5. Publish the module in your desired position. 
 
-You can also publish multiple Sign Up Chimp modules on the same page, for example in the top or bottom positions of your template.
+Once the module is visible on your site, visitors can now enter their email and first name to subscribe to your mailing list directly from your website.
 
 ## Sign Up Chimp Features
 - **AJAX Signup**. Sign Up Chimp uses an AJAX-powered form to send data to MailChimp without reloading the page, allowing your user to stay on the page after submitting the form. 
 - **Custom CSS Classes**. You can stylize your form to your heart's content by adding classes to the form elements directly in the module configuration.
+- **Multiple Forms**. You can also publish multiple Sign Up Chimp modules on the same page, for example in the top or bottom positions of your template.
 
 ## Sign Up Chimp Requirements
-The Sign Up Chimp module works with Joomla! versions greater than 4.4 and requires PHP 7.2.5 or later. You will also need a MailChimp account and an API key. [Read about API keys here](https://mailchimp.com/help/about-api-keys/)
+The Sign Up Chimp module works with Joomla! versions greater than 4.4 and requires PHP 7.2.5 or later. 
+
+You will also need a MailChimp account and an API key. [Read about API keys here](https://mailchimp.com/help/about-api-keys/)
 
 ## FAQ
 **Q:Can I use this module with Mailerlite?**  
