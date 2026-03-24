@@ -1,5 +1,7 @@
 # Sign Up Chimp
+
 ![Sign Up Chimp Image](Sign-Up-Chimp.jpg)
+
 Sign Up Chimp is a Joomla! module which, when published in a visible module position, displays a MailChimp signup form on your website which submits with AJAX.
 
 ## Why Use Sign Up Chimp
