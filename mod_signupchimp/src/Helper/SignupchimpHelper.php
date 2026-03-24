@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.5
+ * @version    1.6
  * @license    GNU General Public License version 2
  */
 
@@ -37,8 +37,7 @@ class SignupchimpHelper
         $subscriberHash = $this->MChimp::subscriberHash($this->emailAddress);
         $result = $this->MChimp->get("lists/{$this->listID}/members/{$subscriberHash}");
         
-        if (!$this->MChimp->success() && defined('JDEBUG') && JDEBUG)
-          {
+        if (!$this->MChimp->success() && defined('JDEBUG') && JDEBUG) {
           Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
           }
           
@@ -192,7 +191,8 @@ class SignupchimpHelper
             throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_NO_API_KEY'));
         }
 
-        if (empty($this->listID))
+        // Custom form sets a sentinel value of '-1' when the list field isn't populated
+        if (empty($this->listID) || $this->listID == '-1')
         {
             throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_NO_LIST'));
         }

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "mod_signupchimp",
+  "version": "1.6",
+  "description": "Sign Up Chimp Module",
+  "license": "GPL-2.0",
+  "assets": [
+    {
+      "name": "mod_signupchimp.signupchimp",
+      "type": "script",
+      "uri": "mod_signupchimp/signupchimp.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "type": "module"
+      },
+      "version": "1.6"
+    }
+  ]
+}

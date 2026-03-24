@@ -18,17 +18,17 @@ return new class () implements InstallerScriptInterface {
     private string $minimumPhp    = '7.2.5';
 
     public function install(InstallerAdapter $adapter): bool {
-        echo Text::_('MOD_SIGNUPCHIMP_INSTALL') . "<br>";
+        Factory::getApplication()->enqueueMessage(Text::_('MOD_SIGNUPCHIMP_INSTALL'), 'success');
         return true;
     }
-
+  
     public function update(InstallerAdapter $adapter): bool{
-        echo Text::_('MOD_SIGNUPCHIMP_UPDATE') . "<br>";
+        Factory::getApplication()->enqueueMessage(Text::_('MOD_SIGNUPCHIMP_UPDATE'), 'success');
         return true;
     }
 
     public function uninstall(InstallerAdapter $adapter): bool {
-        echo Text::_('MOD_SIGNUPCHIMP_UNINSTALL') . "<br>";
+        Factory::getApplication()->enqueueMessage(Text::_('MOD_SIGNUPCHIMP_UNINSTALL'), 'info');
         return true;
     }
 
@@ -48,7 +48,7 @@ return new class () implements InstallerScriptInterface {
     }
 
     public function postflight(string $type, InstallerAdapter $adapter): bool {
-        echo Text::_('MOD_SIGNUPCHIMP_POSTFLIGHT') . "<br>";
+        Factory::getApplication()->enqueueMessage(Text::_('MOD_SIGNUPCHIMP_POSTFLIGHT'), 'info');
         return true;
     }
 };
