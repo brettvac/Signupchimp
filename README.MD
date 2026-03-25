@@ -33,7 +33,7 @@ You will also need a MailChimp account and an API key. [Read about API keys here
 **A:** No, Sign Up Chimp is designed solely for use with MailChimp.
 
 **Q: Why didn't you use Camel casing in your namespace code (i.e. SignupChimp)**  
-**A:** Because Camel casing won't work with Joomla's com_ajax component. Annoyingly enough, [com_ajax](https://manual.joomla.org/docs/4.4/general-concepts/javascript/com-ajax/) dynamically creates the name of the ajax function that you're calling based on the module name. Therefore, com_ajax fails to find your helper file if you use camel casing in your namespace. It took me days to figure that out.
+**A:** Because Camel casing won't work with the code `$moduleInstance->getHelper(substr($class, 3)))` inside Joomla's com_ajax component. Annoyingly enough, [com_ajax](https://manual.joomla.org/docs/4.4/general-concepts/javascript/com-ajax/) dynamically creates the name of the ajax function that you're calling based on the module name. Therefore, com_ajax fails to find your helper file if you use camel casing in your namespace. It took me days to figure that out.
 
 **Q: This Joomla! extension is absolutely fantastic! Can I send a donation?**  
 **A:** Sure! Send your cryptonation to the following wallets:
