@@ -2,7 +2,7 @@
 <extension type="module" client="site" method="upgrade">
     <name>MOD_SIGNUPCHIMP</name>
     <element>mod_signupchimp</element>
-    <version>1.6</version>
+    <version>1.6.1</version>
     <description>MOD_SIGNUPCHIMP_DESC</description>
     <author>Brett Vachon</author>
     <creationDate>2025-02-14</creationDate>
