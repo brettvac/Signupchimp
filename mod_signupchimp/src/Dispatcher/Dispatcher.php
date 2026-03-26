@@ -21,7 +21,8 @@ use Joomla\CMS\Helper\HelperFactoryAwareTrait;
  */
 class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareInterface
 {
-    use HelperFactoryAwareTrait;
+    // Provide the getHelperFactory() and setHelperFactory() methods required to inject the module's helper.
+    use HelperFactoryAwareTrait; 	
 
     /**
      * Returns the layout data.
@@ -36,11 +37,11 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
 
         // Add template-related language strings to the data array
         // These will be automatically extracted into variables in the layout file
+        $data['emailLabel']       = Text::_('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS');
         $data['emailPlaceholder'] = Text::_('MOD_SIGNUPCHIMP_EMAIL_PLACEHOLDER');
+        $data['fnameLabel']       = Text::_('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME');
         $data['fnamePlaceholder'] = Text::_('MOD_SIGNUPCHIMP_FIRST_NAME_PLACEHOLDER');
         $data['gdprText']         = Text::_('MOD_SIGNUPCHIMP_GDPR_TEXT');
-        $data['emailLabel']       = Text::_('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS');
-        $data['fnameLabel']       = Text::_('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME');
 
         return $data;
     }
