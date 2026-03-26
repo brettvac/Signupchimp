@@ -45,7 +45,6 @@ $buttonText = $params->get('button', '');
 $emailClass = $params->get('emailclass', '');
 $fnameClass = $params->get('fnameclass', '');
 $gdprClass  = $params->get('gdprclass', '');
-$gdprText   = $params->get('gdprtext', ''); 
 ?>
 
 <div id="sc_result<?php echo $moduleId; ?>"></div>
