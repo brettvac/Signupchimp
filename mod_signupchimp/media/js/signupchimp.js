@@ -1,6 +1,6 @@
 /**
  * @package    Sign Up Chimp Module
- * @version    1.6
+ * @version    1.7
  * @license    GNU General Public License version 2
  */
 
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function handleSignupSubmit(form) {
     // Get moduleId from the form's data attribute
-    const moduleId = form.getAttribute('data-module-id');
+    const moduleId = form.dataset.scModuleId;
     
     // Retrieve options specifically for this module instance via addScriptOptions
     const options = Joomla.getOptions('mod_signupchimp.' + moduleId);
@@ -30,11 +30,8 @@ function handleSignupSubmit(form) {
     scResultDiv.innerHTML = Joomla.Text._('MOD_SIGNUPCHIMP_MESSAGE_ADDING') + '<br>';
 
     // Get form data
-    const data = new URLSearchParams({
-        email: form.querySelector('[name="email"]').value,
-        fname: form.querySelector('[name="fname"]').value,
-        moduleId: moduleId
-    }).toString();
+    const formData = new FormData(form);
+    const data = new URLSearchParams(formData).toString();
 
     // Send AJAX request using Joomla.request
     Joomla.request({
@@ -69,7 +66,7 @@ function handleSignupSubmit(form) {
             }
         },
         onError: function(xhr) {
-            // Get the error message, including from MC  
+            // Get the error message, including from Mailchimp
             const response = JSON.parse(xhr.response);
             
             scResultDiv.innerHTML = ''; // Clear any existing content in sc_resultDiv before appending new content

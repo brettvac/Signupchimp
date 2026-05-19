@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.6
+ * @version    1.7
  * @license    GNU General Public License version 2
  */
 
@@ -30,13 +30,12 @@ class Dispatcher extends AbstractModuleDispatcher implements HelperFactoryAwareI
      *
      * @return  array
      */
-    protected function getLayoutData()
+    protected function getLayoutData(): array
     {
-        // Get base data: module, app, input, params, template
+        // Get base data (module, app, input, params and template)
         $data = parent::getLayoutData();
 
         // Add template-related language strings to the data array
-        // These will be automatically extracted into variables in the layout file
         $data['emailLabel']       = Text::_('MOD_SIGNUPCHIMP_LABEL_EMAIL_ADDRESS');
         $data['emailPlaceholder'] = Text::_('MOD_SIGNUPCHIMP_EMAIL_PLACEHOLDER');
         $data['fnameLabel']       = Text::_('MOD_SIGNUPCHIMP_LABEL_FIRST_NAME');

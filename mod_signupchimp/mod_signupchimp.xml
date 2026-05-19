@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" client="site" method="upgrade">
     <name>MOD_SIGNUPCHIMP</name>
-    <element>mod_signupchimp</element>
-    <version>1.6.1</version>
+    <version>1.7</version>
     <description>MOD_SIGNUPCHIMP_DESC</description>
     <author>Brett Vachon</author>
     <creationDate>2025-02-14</creationDate>
+    <copyright>(C) 2025 - 2026 Brett Vachon</copyright>
     <license>GNU General Public License version 2</license>
-    <authorEmail>daloonik@gmail.com</authorEmail>
-    
-    <scriptfile>script.php</scriptfile>
     
     <namespace path="src">Naftee\Module\Signupchimp</namespace>
+
+    <scriptfile>script.php</scriptfile>
     
     <files>
         <folder module="mod_signupchimp">services</folder>
@@ -73,6 +72,8 @@
             
         </fields>
     </config>
+    
+    <changelogurl>https://raw.githubusercontent.com/brettvac/signupchimp/refs/heads/main/update/changelog.xml</changelogurl>
     
     <updateservers>
         <server type="extension" name="Sign Up Chimp Updates">https://raw.githubusercontent.com/brettvac/signupchimp/refs/heads/main/update/updates.xml</server>

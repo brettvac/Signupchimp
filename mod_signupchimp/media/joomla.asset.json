@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
   "name": "mod_signupchimp",
-  "version": "1.6",
+  "version": "1.7",
   "description": "Sign Up Chimp Module",
   "license": "GPL-2.0",
   "assets": [
@@ -15,7 +15,7 @@
       "attributes": {
         "type": "module"
       },
-      "version": "1.6"
+      "version": "1.7"
     }
   ]
 }

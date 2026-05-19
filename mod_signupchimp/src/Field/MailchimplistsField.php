@@ -1,7 +1,7 @@
 <?php
 /**
  * @package      Sign Up Chimp Module
- * @version      1.6
+ * @version      1.7
  * @license      GNU General Public License version 2
  */
 
@@ -29,7 +29,7 @@ class MailchimplistsField extends ListField
      * The form field type which matches the case of the XML definition exactly.
      *
      * @var    string
-     * @since  1.6.0
+     * @since  1.6
      */
     protected $type = 'mailchimplists';
 
@@ -38,7 +38,7 @@ class MailchimplistsField extends ListField
      *
      * @return  array  The field option objects.
      *
-     * @since   1.6.0
+     * @since   1.6
      */
     protected function getOptions()
     {
@@ -92,6 +92,7 @@ class MailchimplistsField extends ListField
             $options[] = HTMLHelper::_('select.option', '-1', Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED'));
         }
 
-        return array_merge(parent::getOptions(), $options);
+        $options = array_merge(parent::getOptions(), $options);
+        return $options;
     }
 }

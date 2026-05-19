@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelogs>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.7</version>
+
+        <security>
+            <item>Included a form token in the template file and added CSRF verification inside the Ajax function.</item>
+        </security>
+
+        <fix>
+            <item><![CDATA[Added <pre>$app = Factory::getApplication();</pre> at the beginning of the Ajax function to avoid creating multiple application instances unnecessarily.]]></item>
+            <item><![CDATA[Used the <pre>dataset</pre> variable in JavaScript instead of <pre>getAttribute()</pre> to select the form.]]></item>
+            <item>Included the Item ID as a hidden form input so the Ajax function can correctly load module parameters when assigned to specific menu items.</item>
+        </fix>
+
+        <addition>
+            <item><![CDATA[Added return type <pre>array</pre> to protected function <pre>getLayoutData(): array</pre>.]]></item>
+            <item><![CDATA[Added intermediate variable <pre>$options</pre> when merging options from the form definition XML.]]></item>
+            <item><![CDATA[Used intermediate variable <pre>$document</pre> inside the template file.]]></item>
+            <item>Added changelogurl tag to the extension manifest XML so extension versions link to changelogs in the Joomla manage view.</item>
+            <item>Added module ID as a hidden input in the form to simplify JavaScript data retrieval.</item>
+            <item>Added method and module ID variables to Ajax error message output for clearer debugging.</item>
+        </addition>
+
+        <change>
+            <item>Removed author URL from the manifest file.</item>
+            <item>Standardized ordering of manifest file elements.</item>
+            <item>Removed the element tag from the manifest file since the name tag value is cleaned and used automatically.</item>
+            <item>Changed update info URL, simplified version restrictions, and added changelog URL to the update server file.</item>
+        </change>
+    </changelog>
+    
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.6.1</version>
+
+        <fix>
+            <item>Fixed bug where GDPR text was not appearing.</item>
+            <item>Fixed XML formatting issues.</item>
+        </fix>
+
+        <change>
+            <item>Bumped version from 1.6 to 1.6.1.</item>
+        </change>
+    </changelog>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.6</version>
+
+        <addition>
+            <item>Implemented abstractmodule dispatcher.</item>
+            <item>Moved frontend JavaScript into a separate media file.</item>
+            <item>Created external JavaScript submit script in media directory.</item>
+            <item>Implemented Joomla Web Asset Manager for JavaScript assets.</item>
+            <item>Implemented auto-populate of Mailchimp list field.</item>
+            <item>Added language string for missing API key.</item>
+        </addition>
+
+        <change>
+            <item>Changed language string to remove colon after e-mail address.</item>
+            <item>Changed update server to reflect latest release.</item>
+            <item>Moved params retrieval into the template file.</item>
+            <item>Loaded external script inside template file and passed variables from PHP to JavaScript instead of using inline JavaScript.</item>
+            <item>Standardized manifest file formatting.</item>
+            <item>Updated manifest file for JavaScript media.</item>
+            <item>Updated PHP file versions to 1.6.</item>
+            <item>Updated helper file to handle Mailchimp list ID errors.</item>
+            <item>Modified List ID language key.</item>
+            <item>Updated README documentation.</item>
+        </change>
+
+        <fix>
+            <item>Used Factory::getApplication()->enqueueMessage for installer script messages.</item>
+            <item>Checked and removed unused imports.</item>
+            <item>Checked and removed or modified unused language strings.</item>
+        </fix>
+    </changelog>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.5</version>
+
+        <addition>
+            <item>Added debugging support.</item>
+            <item>Added try/catch block for initial Mailchimp initialization.</item>
+        </addition>
+
+        <change>
+            <item>Removed surrounding div from form submit button.</item>
+            <item>Changed "users" to "contacts" inside comments to reflect Mailchimp terminology.</item>
+            <item>Optimized loading of language strings.</item>
+        </change>
+
+        <fix>
+            <item>Fixed statement that loads language strings.</item>
+        </fix>
+    </changelog>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.4</version>
+
+        <fix>
+            <item>Fixed improper French language string during installation.</item>
+            <item>Improved handling of already subscribed contact statuses.</item>
+        </fix>
+    </changelog>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.3</version>
+
+        <fix>
+            <item>Fixed issue where error or success messages were not showing.</item>
+            <item>Implemented a more robust and secure message handling method using programmatically created elements and appended text nodes.</item>
+        </fix>
+
+        <change>
+            <item>Moved empty index.html files to correct directories.</item>
+        </change>
+
+        <remove>
+            <item>Removed unused commented-out code.</item>
+        </remove>
+    </changelog>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.2</version>
+
+        <fix>
+            <item>Fixed update issues.</item>
+            <item>Fixed incorrect version in manifest file.</item>
+        </fix>
+    </changelog>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.1</version>
+
+        <fix>
+            <item>Fixed page not found error.</item>
+        </fix>
+
+        <change>
+            <item>Reduced use of session variables by loading module inside the helper file.</item>
+        </change>
+    </changelog>
+
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
+        <version>1.0</version>
+
+        <addition>
+            <item>Initial release of Sign Up Chimp module.</item>
+        </addition>
+    </changelog>
+</changelogs>

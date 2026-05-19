@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.6
+ * @version    1.7
  * @license    GNU General Public License version 2
  */
 
@@ -13,8 +13,11 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\Registry\Registry;
-use DrewM\MailChimp\MailChimp;
 use Joomla\CMS\Log\Log;
+use Joomla\CMS\Session\Session;
+
+// Mailchimp library
+use DrewM\MailChimp\MailChimp;
 
 require_once __DIR__ . '/../../lib/MailChimp.php';
 
@@ -140,14 +143,15 @@ class SignupchimpHelper
      */
     protected function getParams($moduleId)
     {
+        // Module ID must be a String, not an Integer
+        $moduleId = (string) $moduleId;  
         // Load the module by ID
-        $moduleId = (string) $moduleId;  // Module ID must be a String, not an Integer
         $module = ModuleHelper::getModuleById($moduleId);
 
         // Check if the module is enabled, assigned to current menu item or all items, and accessible by the user
         if (!ModuleHelper::isEnabled($module->module))
-        {
-            throw new \Exception(Text::_('COM_AJAX_MODULE_NOT_ACCESSIBLE'));
+        {         
+            throw new \Exception('[' . __METHOD__ . '] '. Text::sprintf('COM_AJAX_MODULE_NOT_ACCESSIBLE', $moduleId));
         }
 
         return new Registry($module->params);
@@ -161,24 +165,33 @@ class SignupchimpHelper
      */
     public function signupAjax()
     {
+       
+        $app = Factory::getApplication();
+        
         // Get the submitted form values (retrieved as POST data)
-        $input = Factory::getApplication()->getInput();
-
+        $input = $app->getInput();
+        
+        // Check CSRF token
+        if (!Session::checkToken())
+        {
+            throw new \Exception(Text::_('JINVALID_TOKEN'));
+        }     
+        
         // Get the module ID from the request
         $moduleId = $input->getInt('moduleId', 0);
         if (!$moduleId)
         {
-            throw new \Exception(Text::_('COM_AJAX_MODULE_NOT_ACCESSIBLE'));
+             throw new \Exception('[' . __METHOD__ . '] '. Text::sprintf('COM_AJAX_MODULE_NOT_ACCESSIBLE', $moduleId));
         }
 
         // Get module parameters
         $params = $this->getParams($moduleId);
+        
         $apiKey = $params->get('apikey', '');
         $this->listID = $params->get('listid', '');
         $tagsInput = $params->get('tags', '');
 
         // Load language file
-        $app = Factory::getApplication('site');
         $language = $app->getLanguage();
         $language->load('mod_signupchimp', JPATH_SITE);
 

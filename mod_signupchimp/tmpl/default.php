@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.6
+ * @version    1.7
  * @license    GNU General Public License version 2
  */
 
@@ -10,11 +10,13 @@
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\HTML\HTMLHelper;
 
+//Get the Web Asset Manager
 $app = Factory::getApplication();
 $document = $app->getDocument();
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
-$wa = $app->getDocument()->getWebAssetManager();
+$wa = $document->getWebAssetManager();
 // Load the joomla.asset.json file
 $wa->getRegistry()->addExtensionRegistryFile('mod_signupchimp');
 
@@ -37,6 +39,8 @@ $options = [
     'failureClass' => $params->get('failuremsgclass', '')
 ];
 
+/* $configs = $document->getScriptOptions('mod_signupchimp'); */
+
 // Pass options to JavaScript using the specific moduleId as a key
 $document->addScriptOptions('mod_signupchimp.' . $moduleId, $options);
 
@@ -49,7 +53,7 @@ $gdprClass  = $params->get('gdprclass', '');
 
 <div id="sc_result<?php echo $moduleId; ?>"></div>
 
-<form name="signupchimp" id="sc_form<?php echo $moduleId; ?>" data-module-id="<?php echo $moduleId; ?>">
+<form name="signupchimp" id="sc_form<?php echo $moduleId; ?>" data-sc-module-id="<?php echo $moduleId; ?>">
       
     <div id="sc_email<?php echo $moduleId; ?>">
         <label for="email<?php echo $moduleId; ?>"><?php echo $emailLabel; ?></label>
@@ -68,4 +72,9 @@ $gdprClass  = $params->get('gdprclass', '');
     <button type="submit" class="<?php echo $params->get('btnclass'); ?>" id="sc_button<?php echo $moduleId; ?>">
         <?php echo $buttonText; ?>
     </button>
+    
+    <input type="hidden" name="moduleId" value="<?php echo $moduleId; ?>">
+    <input type="hidden" name="Itemid" value="<?php echo $app->getInput()->getInt('Itemid'); ?>">
+    
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
