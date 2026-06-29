@@ -1,0 +1,36 @@
+joomla-dialog.sc-popup-window dialog {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color-translucent, #dee2e6);
+    border-radius: 0.3rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.52) ;
+    transition: background 0.2s linear, border 0.2s linear, opacity 0.2s linear;
+}
+
+joomla-dialog.sc-popup-window dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.6) ;
+}
+
+joomla-dialog.sc-popup-window .joomla-dialog-body {
+    padding: 1.5rem;
+}
+
+joomla-dialog.sc-popup-window .joomla-dialog-header {
+    background-color: transparent;
+    color: initial;
+    border-bottom: 1px solid var(--border-color, #dee2e6);
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    display: flex;
+    position: relative;
+}
+
+joomla-dialog.sc-popup-window button:not(:disabled),
+joomla-dialog.sc-popup-window [type="button"]:not(:disabled),
+joomla-dialog.sc-popup-window [type="submit"]:not(:disabled) {
+    cursor: pointer;
+}
+
+joomla-dialog.sc-popup-window .joomla-dialog-footer.empty {
+    padding: 0;
+}

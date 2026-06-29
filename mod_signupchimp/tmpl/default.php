@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.7
+ * @version    1.8
  * @license    GNU General Public License version 2
  */
 
@@ -13,7 +13,6 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\HTML\HTMLHelper;
 
 //Get the Web Asset Manager
-$app = Factory::getApplication();
 $document = $app->getDocument();
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $document->getWebAssetManager();
@@ -26,8 +25,15 @@ $wa->useScript('mod_signupchimp.signupchimp');
 // Load language constants for JS usage
 Text::script('MOD_SIGNUPCHIMP_MESSAGE_ADDING');
 
-//Get the module ID for the form
-$moduleId = $module->id;
+// Get configuration parameters
+$moduleId   = $module->id;
+$renderMode = $params->get('render_mode', 'inline');
+
+// Only load Joomla! dialog scripts and styles if rendering as a modal
+if ($renderMode === 'modal') {
+    $wa->useStyle('mod_signupchimp.signupchimp');
+    $wa->useScript('joomla.dialog'); 
+}
 
 // Prepare options array
 $options = [
@@ -39,16 +45,16 @@ $options = [
     'failureClass' => $params->get('failuremsgclass', '')
 ];
 
-/* $configs = $document->getScriptOptions('mod_signupchimp'); */
-
-// Pass options to JavaScript using the specific moduleId as a key
 $document->addScriptOptions('mod_signupchimp.' . $moduleId, $options);
 
 // Get remaining parameters for the HTML form
-$buttonText = $params->get('button', '');
-$emailClass = $params->get('emailclass', '');
-$fnameClass = $params->get('fnameclass', '');
-$gdprClass  = $params->get('gdprclass', '');
+$buttonText  = $params->get('buttontext', '');
+$buttonClass = $params->get('buttonclass');
+$emailClass  = $params->get('emailclass', '');
+$fnameClass  = $params->get('fnameclass', '');
+$gdprClass   = $params->get('gdprclass', '');
+
+ob_start(); 
 ?>
 
 <div id="sc_result<?php echo $moduleId; ?>"></div>
@@ -69,12 +75,73 @@ $gdprClass  = $params->get('gdprclass', '');
         <?php echo $gdprText; ?>
     </div>
     
-    <button type="submit" class="<?php echo $params->get('btnclass'); ?>" id="sc_button<?php echo $moduleId; ?>">
+    <button type="submit" class="<?php echo $buttonClass; ?>" id="sc_button<?php echo $moduleId; ?>">
         <?php echo $buttonText; ?>
     </button>
+    
+    <div style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
+        <label for="sc_website<?php echo $moduleId; ?>">Gotcha</label>
+        <input type="text" name="sc_website" id="sc_website<?php echo $moduleId; ?>" tabindex="-1" autocomplete="off">
+    </div>
     
     <input type="hidden" name="moduleId" value="<?php echo $moduleId; ?>">
     <input type="hidden" name="Itemid" value="<?php echo $app->getInput()->getInt('Itemid'); ?>">
     
     <?php echo HTMLHelper::_('form.token'); ?>
 </form>
+
+<?php
+$formHtml = ob_get_clean(); 
+
+if ($renderMode === 'modal') {
+    // Safely escape the module title for JavaScript injection
+    $moduleTitle = htmlspecialchars($module->title, ENT_QUOTES, 'UTF-8');
+    
+    // Inject Dialog setup script ONLY when modal is active
+    $scFormScript = "
+    import JoomlaDialog from 'joomla.dialog';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const triggerBtn = document.getElementById('sc_trigger_{$moduleId}');
+        const formContainer = document.getElementById('sc_container_{$moduleId}');
+
+        if (triggerBtn && formContainer) {
+            
+            // Initialize the dialog on page load
+            const scDialog = new JoomlaDialog({
+                textHeader: '{$moduleTitle}',
+                popupContent: formContainer,
+                width: 'fit-content',
+                height: 'fit-content',
+                className: 'sc-popup-window'
+            });
+
+            triggerBtn.addEventListener('click', () => {
+                formContainer.style.display = 'block'; 
+                scDialog.show();
+            });
+        }
+    });
+    ";
+    
+    $wa->addInlineScript($scFormScript, ['position' => 'after'], ['type' => 'module'], ['joomla.dialog']);
+}
+?>
+
+<?php if ($renderMode === 'inline'): ?>
+    
+    <div id="sc_container_<?php echo $moduleId; ?>">
+        <?php echo $formHtml; ?>
+    </div>
+
+<?php else: ?>
+
+    <button type="button" class="<?php echo $buttonClass; ?>" id="sc_trigger_<?php echo $moduleId; ?>">
+        <?php echo $buttonText; ?>
+    </button>
+
+    <div id="sc_container_<?php echo $moduleId; ?>" style="display: none;">
+        <?php echo $formHtml; ?>
+    </div>
+
+<?php endif; ?>

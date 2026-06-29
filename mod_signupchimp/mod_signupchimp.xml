@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" client="site" method="upgrade">
     <name>MOD_SIGNUPCHIMP</name>
-    <version>1.7</version>
+    <version>1.8</version>
     <description>MOD_SIGNUPCHIMP_DESC</description>
     <author>Brett Vachon</author>
     <creationDate>2025-02-14</creationDate>
@@ -28,49 +28,52 @@
     
     <media destination="mod_signupchimp" folder="media">
       <folder>js</folder>
+      <folder>css</folder>
       <filename>joomla.asset.json</filename>
    </media>
     
    <config>
-        <fields name="params" addfieldprefix="Naftee\Module\Signupchimp\Site\Field">
-            <fieldset name="basic">
-                <field name="apikey" type="text" default="" label="MOD_SIGNUPCHIMP_API_KEY_LABEL" description="MOD_SIGNUPCHIMP_API_KEY_DESC" rows="1" columns="1" />
-                
-                <field name="listid" type="mailchimplists" default="" label="MOD_SIGNUPCHIMP_LIST_ID_LABEL" description="MOD_SIGNUPCHIMP_LIST_ID_DESC" />
-                
-                <field name="tags" type="text" default="" label="MOD_SIGNUPCHIMP_TAGS_LABEL" description="MOD_SIGNUPCHIMP_TAGS_DESC" />
-                
-                <field name="button" type="text" default="Sign Up!" label="MOD_SIGNUPCHIMP_BUTTON_LABEL" description="MOD_SIGNUPCHIMP_BUTTON_DESC" />
-                
-                <field name="redirectaftersubscribe" type="radio" default="0" label="MOD_SIGNUPCHIMP_REDIRECT_AFTER_SUBSCRIBE_LABEL" description="MOD_SIGNUPCHIMP_REDIRECT_AFTER_SUBSCRIBE_DESC" 
-         layout="joomla.form.field.radio.switcher">
-                    <option value="0">JNO</option>
-                    <option value="1">JYES</option>
-                </field>
-                
-                <field name="menuitemaftersubscribe" type="menuitem" label="MOD_SIGNUPCHIMP_MENU_ITEM_AFTER_SUBSCRIBE_LABEL" description="MOD_SIGNUPCHIMP_MENU_ITEM_AFTER_SUBSCRIBE_DESC" 
-         showon="redirectaftersubscribe:1" />
-                
-                <field name="redirectdelay" type="list" default="2" label="MOD_SIGNUPCHIMP_REDIRECT_DELAY_LABEL" description="MOD_SIGNUPCHIMP_REDIRECT_DELAY_DESC" showon="redirectaftersubscribe:1">
-                    <option value="0">0</option>
-                    <option value="1000">1</option>
-                    <option value="2000">2</option>
-                    <option value="3000">3</option>
-                    <option value="4000">4</option>
-                    <option value="5000">5</option>
-                </field>
-            </fieldset>
-            
-            <fieldset name="styles" label="MOD_SIGNUPCHIMP_STYLES_LABEL" description="MOD_SIGNUPCHIMP_STYLES_DESC">
-                <field name="emailclass" type="text" default="form-control" label="MOD_SIGNUPCHIMP_EMAIL_FIELD_CLASS_LABEL" description="MOD_SIGNUPCHIMP_EMAIL_FIELD_CLASS_DESC" />
-                <field name="fnameclass" type="text" default="form-control" label="MOD_SIGNUPCHIMP_FIRST_NAME_FIELD_CLASS_LABEL" description="MOD_SIGNUPCHIMP_FIRST_NAME_FIELD_CLASS_DESC" />
-                <field name="gdprclass" type="text" default="small" label="MOD_SIGNUPCHIMP_GDPR_CLASS_LABEL" description="MOD_SIGNUPCHIMP_GDPR_CLASS_DESC" />
-                <field name="btnclass" type="text" default="btn btn-lg btn-success d-grid col-6 mx-auto" label="MOD_SIGNUPCHIMP_BUTTON_CLASS_LABEL" description="MOD_SIGNUPCHIMP_BUTTON_CLASS_DESC" />
-                <field name="successmsgclass" type="text" default="alert alert-success" label="MOD_SIGNUPCHIMP_SUCCESS_MESSAGE_CLASS_LABEL" description="MOD_SIGNUPCHIMP_SUCCESS_MESSAGE_CLASS_DESC" />
-                <field name="failuremsgclass" type="text" default="alert alert-danger" label="MOD_SIGNUPCHIMP_FAILURE_MESSAGE_CLASS_LABEL" description="MOD_SIGNUPCHIMP_FAILURE_MESSAGE_CLASS_DESC" />
-            </fieldset>
-            
-        </fields>
+      <fields name="params" addfieldprefix="Naftee\Module\Signupchimp\Site\Field">
+          <fieldset name="basic">
+              <field name="apikey" type="text" default="" label="MOD_SIGNUPCHIMP_API_KEY_LABEL" description="MOD_SIGNUPCHIMP_API_KEY_DESC" rows="1" columns="1" />
+              
+              <field name="listid" type="mailchimplists" default="" label="MOD_SIGNUPCHIMP_LIST_NAME_LABEL" description="MOD_SIGNUPCHIMP_LIST_NAME_DESC" />
+              
+              <field name="tags" type="text" default="" label="MOD_SIGNUPCHIMP_TAGS_LABEL" description="MOD_SIGNUPCHIMP_TAGS_DESC" />
+              
+              <field name="render_mode" type="list" default="inline" label="MOD_SIGNUPCHIMP_RENDER_MODE_LABEL" description="MOD_SIGNUPCHIMP_RENDER_MODE_DESC">
+                  <option value="inline">MOD_SIGNUPCHIMP_RENDER_MODE_INLINE</option>
+                  <option value="modal">MOD_SIGNUPCHIMP_RENDER_MODE_MODAL</option>
+              </field>
+              
+              <field name="buttontext" type="text" default="Sign Up!" label="MOD_SIGNUPCHIMP_BUTTON_LABEL" description="MOD_SIGNUPCHIMP_BUTTON_DESC" />
+              
+              <field name="redirectaftersubscribe" type="radio" default="0" label="MOD_SIGNUPCHIMP_REDIRECT_AFTER_SUBSCRIBE_LABEL" description="MOD_SIGNUPCHIMP_REDIRECT_AFTER_SUBSCRIBE_DESC" layout="joomla.form.field.radio.switcher">
+                  <option value="0">JNO</option>
+                  <option value="1">JYES</option>
+              </field>
+              
+              <field name="menuitemaftersubscribe" type="menuitem" label="MOD_SIGNUPCHIMP_MENU_ITEM_AFTER_SUBSCRIBE_LABEL" description="MOD_SIGNUPCHIMP_MENU_ITEM_AFTER_SUBSCRIBE_DESC" showon="redirectaftersubscribe:1" />
+              
+              <field name="redirectdelay" type="list" default="2" label="MOD_SIGNUPCHIMP_REDIRECT_DELAY_LABEL" description="MOD_SIGNUPCHIMP_REDIRECT_DELAY_DESC" showon="redirectaftersubscribe:1">
+                  <option value="0">0</option>
+                  <option value="1000">1</option>
+                  <option value="2000">2</option>
+                  <option value="3000">3</option>
+                  <option value="4000">4</option>
+                  <option value="5000">5</option>
+              </field>
+          </fieldset>
+          
+          <fieldset name="styles" label="MOD_SIGNUPCHIMP_STYLES_LABEL" description="MOD_SIGNUPCHIMP_STYLES_DESC">
+              <field name="emailclass" type="text" default="form-control" label="MOD_SIGNUPCHIMP_EMAIL_FIELD_CLASS_LABEL" description="MOD_SIGNUPCHIMP_EMAIL_FIELD_CLASS_DESC" />
+              <field name="fnameclass" type="text" default="form-control" label="MOD_SIGNUPCHIMP_FIRST_NAME_FIELD_CLASS_LABEL" description="MOD_SIGNUPCHIMP_FIRST_NAME_FIELD_CLASS_DESC" />
+              <field name="gdprclass" type="text" default="small" label="MOD_SIGNUPCHIMP_GDPR_CLASS_LABEL" description="MOD_SIGNUPCHIMP_GDPR_CLASS_DESC" />
+              <field name="buttonclass" type="text" default="btn btn-lg btn-success d-grid col-6 mx-auto" label="MOD_SIGNUPCHIMP_BUTTON_CLASS_LABEL" description="MOD_SIGNUPCHIMP_BUTTON_CLASS_DESC" />
+              <field name="successmsgclass" type="text" default="alert alert-success" label="MOD_SIGNUPCHIMP_SUCCESS_MESSAGE_CLASS_LABEL" description="MOD_SIGNUPCHIMP_SUCCESS_MESSAGE_CLASS_DESC" />
+              <field name="failuremsgclass" type="text" default="alert alert-danger" label="MOD_SIGNUPCHIMP_FAILURE_MESSAGE_CLASS_LABEL" description="MOD_SIGNUPCHIMP_FAILURE_MESSAGE_CLASS_DESC" />
+          </fieldset>
+      </fields>
     </config>
     
     <changelogurl>https://raw.githubusercontent.com/brettvac/signupchimp/refs/heads/main/update/changelog.xml</changelogurl>

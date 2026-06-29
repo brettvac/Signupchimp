@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.7
+ * @version    1.8
  * @license    GNU General Public License version 2
  */
 
@@ -30,11 +30,6 @@ class SignupchimpHelper
     private $tags;
     private $successMsg;
 
-    /**
-     * Checks if the current email address already exists in the MailChimp audience list.
-     *
-     * @return  bool  True if the email is already subscribed, false otherwise
-     */
     protected function checkEmailExists()
     {
         $subscriberHash = $this->MChimp::subscriberHash($this->emailAddress);
@@ -47,12 +42,6 @@ class SignupchimpHelper
         return $this->MChimp->success();
     }
 
-    /**
-     * Subscribe a new contact to the MailChimp audience.
-     *
-     * @return string The success message on successful subscription
-     * @throws \Exception If the API request fails
-     */
     protected function subscribeUser()
     {
         $data = [
@@ -77,12 +66,6 @@ class SignupchimpHelper
         throw new \Exception($this->MChimp->getLastError());
     }
 
-    /**
-     * Update an existing MailChimp subscriber with new data.
-     *
-     * @return string The success message on successful update
-     * @throws \Exception If the API request fails or the subscriber cannot be retrieved
-     */
     protected function updateUser()
     {
         $subscriberHash = $this->MChimp::subscriberHash($this->emailAddress);
@@ -175,7 +158,14 @@ class SignupchimpHelper
         if (!Session::checkToken())
         {
             throw new \Exception(Text::_('JINVALID_TOKEN'));
-        }     
+        } 
+
+        // Check honeypot
+        $honeypot = $input->getString('sc_website', '');
+        if (!empty($honeypot))
+        {
+            throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_HONEYPOT_FILLED'));
+        }        
         
         // Get the module ID from the request
         $moduleId = $input->getInt('moduleId', 0);
