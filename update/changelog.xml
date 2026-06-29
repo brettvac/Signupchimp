@@ -22,7 +22,7 @@
         <item><![CDATA[Implemented modal rendering functionality using <pre>JoomlaDialog</pre> and <pre>popupContent()</pre>.]]></item>
         <item>The popup trigger element is displayed as a button using the same text and CSS class as the submit button inside the form.</item>
         <item>The modal header now uses the module title automatically.</item>
-        <item><![CDATA[Introduced <pre>signupchimp.css</pre> to provide styling for the modal popup functionality.]]</item>
+        <item><![CDATA[Introduced <pre>signupchimp.css</pre> to provide styling for the modal popup functionality.]]></item>
         <item>Added clarification for the list ID and list name parameters inside the form XML definition.</item>
         <item><![CDATA[Introduced intermediate variable <pre>$buttonText</pre> to clarify button label handling.]]></item>
         <item><![CDATA[Introduced intermediate variable <pre>$buttonClass</pre> to clarify button CSS class handling.]]></item>
