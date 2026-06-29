@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelogs>
 
+<changelog>
+    <element>mod_signupchimp</element>
+    <type>module</type>
+    <version>1.8</version>
+
+    <security>
+        <item>Added a simple honeypot field to the template file and implemented verification inside the Ajax function to reduce automated spam submissions.</item>
+    </security>
+
+    <fix>
+        <item>Corrected punctuation and phrasing in both English and French language strings.</item>
+        <item>Added CSS to remove padding from the empty modal footer.</item>
+        <item>Added CSS to prevent template styles from overriding modal header colors.</item>
+    </fix>
+
+    <addition>
+        <item>Added a configuration option to display the sign-up form as either an inline form or a modal popup.</item>
+        <item>Added English and French language strings for the new popup configuration options.</item>
+        <item><![CDATA[Implemented modal rendering functionality using <pre>JoomlaDialog</pre> and <pre>popupContent()</pre>.]]></item>
+        <item>The popup trigger element is displayed as a button using the same text and CSS class as the submit button inside the form.</item>
+        <item>The modal header now uses the module title automatically.</item>
+        <item><![CDATA[Introduced <pre>signupchimp.css</pre> to provide styling for the modal popup functionality.]]</item>
+        <item>Added clarification for the list ID and list name parameters inside the form XML definition.</item>
+        <item><![CDATA[Introduced intermediate variable <pre>$buttonText</pre> to clarify button label handling.]]></item>
+        <item><![CDATA[Introduced intermediate variable <pre>$buttonClass</pre> to clarify button CSS class handling.]]></item>
+    </addition>
+
+    <change>
+        <item><![CDATA[Used the existing <pre>$app</pre> variable directly inside the template file instead of creating a new application instance.]]></item>
+        <item>Changed the LIST_ID identifier to LIST_NAME in the manifest file and language strings to better match the terminology displayed in the backend interface.</item>
+        <item>Updated related descriptions and labels to clarify the distinction between list IDs and list names.</item>
+    </change>
+</changelog>
+
     <changelog>
         <element>mod_signupchimp</element>
         <type>module</type>
