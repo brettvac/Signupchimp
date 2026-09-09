@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.8
+ * @version    1.9
  * @license    GNU General Public License version 2
  */
 
@@ -35,14 +35,67 @@ if ($renderMode === 'modal') {
     $wa->useScript('joomla.dialog'); 
 }
 
+// Get redirect query parameters
+$redirectQueryParams = $params->get('redirectqueryparams', '');
+
+// Only prepare token values and perform replacement when query parameters exist
+if (trim($redirectQueryParams) !== '') {
+    $uri = Uri::getInstance(); 
+    // Prepare values for the token replacement inside redirect query parameters
+    $token_values = [
+        'module_title'     => rawurlencode($module->title),
+        'module_name'      => rawurlencode($module->name),
+        'module_id'        => $moduleId,
+        'page_title'       => rawurlencode($document->getTitle()),
+        'page_description' => rawurlencode($document->getDescription()),
+        'page_url'         => rawurlencode(Uri::current()),
+    ];
+
+    // Replace tokens inside the redirect query parameters
+    $redirectQueryParams = preg_replace_callback(
+        '/\{\{([a-z0-9_]+)\}\}/i',
+        static function ($matches) use ($token_values) {
+            return $token_values[$matches[1]] ?? $matches[0];
+        },
+        $redirectQueryParams
+    );
+
+    // Parse both sides
+    $configured = [];
+    parse_str($redirectQueryParams, $configured);
+
+    $existing = [];
+    parse_str($uri->getQuery(), $existing);
+
+    // Merge: existing params first, then overlay configured ones
+    // (configured keys win on conflict; keys the module never mentioned are kept)
+    $merged = $existing;
+    foreach ($configured as $k => $v) {
+        if (!array_key_exists($k, $merged)) {
+            $merged[$k] = $v;
+        }
+    }
+
+    // Safety: drop any value that still contains a query string
+    foreach ($merged as $k => $v) {
+        if (is_string($v) && (strpos($v, '?') !== false || strpos($v, '&') !== false)) {
+            unset($merged[$k]);
+        }
+    }
+
+    // Rebuild clean query string
+    $redirectQueryParams = http_build_query($merged);
+}
+
 // Prepare options array
 $options = [
-    'baseUri'      => Uri::base(),
-    'redirect'     => (int) $params->get('redirectaftersubscribe', 0),
-    'menuItemId'   => (int) $params->get('menuitemaftersubscribe', 0),
-    'delay'        => (int) $params->get('redirectdelay', 0),
-    'successClass' => $params->get('successmsgclass', ''),
-    'failureClass' => $params->get('failuremsgclass', '')
+    'baseUri'             => Uri::base(),
+    'redirect'            => (int) $params->get('redirectaftersubscribe', 0),
+    'menuItemId'          => (int) $params->get('menuitemaftersubscribe', 0),
+    'redirectQueryParams' => $redirectQueryParams,
+    'delay'               => (int) $params->get('redirectdelay', 0),
+    'successClass'        => $params->get('successmsgclass', ''),
+    'failureClass'        => $params->get('failuremsgclass', '')
 ];
 
 $document->addScriptOptions('mod_signupchimp.' . $moduleId, $options);

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package      Sign Up Chimp Module
- * @version      1.8
+ * @version      1.9
  * @license      GNU General Public License version 2
  */
 
@@ -20,8 +20,7 @@ use DrewM\MailChimp\MailChimp;
 require_once __DIR__ . '/../../lib/MailChimp.php';
 
 /**
- * Form element to retrieve and display Mailchimp Lists (audiences)
- * automatically in the module configuration when API key is provided
+ * Form element to retrieve and display Mailchimp Lists (audiences) automatically in the module configuration when API key is provided
  *
  * @since  1.6
  */
@@ -79,7 +78,7 @@ class MailchimplistsField extends ListField
                 Log::add($error, Log::DEBUG, 'mod_signupchimp');
             }
             
-            $app->enqueueMessage(Text::_('MOD_SIGNUPCHIMP_API_ERROR') . ': ' . $error, 'error');
+            $app->enqueueMessage(sprintf(Text::_('MOD_SIGNUPCHIMP_API_ERROR'), $error), 'error');
             $options[] = HTMLHelper::_('select.option', '-1', Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED'));
         }
 

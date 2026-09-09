@@ -1,6 +1,6 @@
 /**
  * @package    Sign Up Chimp Module
- * @version    1.8
+ * @version    1.9
  * @license    GNU General Public License version 2
  */
 
@@ -55,10 +55,23 @@ function handleSignupSubmit(form) {
             // Handle redirect if enabled
             if (options.redirect === 1) {
                 const menuItemIdAfterSubscribe = options.menuItemId;
-                const redirectUrl = options.baseUri + 'index.php?Itemid=' + menuItemIdAfterSubscribe;
                 const redirectDelay = options.delay;
 
                 if (menuItemIdAfterSubscribe) {
+                    let redirectUrl = options.baseUri + 'index.php?Itemid=' + menuItemIdAfterSubscribe;
+
+                    // Add optional tracking/query parameters
+                    if (options.redirectQueryParams) {
+                        let queryParams = options.redirectQueryParams.trim();
+
+                        // Remove a leading ? or & so we can safely append the parameters
+                        queryParams = queryParams.replace(/^[?&]+/, '');
+
+                        if (queryParams) {
+                            redirectUrl += '&' + queryParams;
+                        }
+                    }
+
                     setTimeout(function() {
                         window.location.href = redirectUrl;
                     }, redirectDelay);

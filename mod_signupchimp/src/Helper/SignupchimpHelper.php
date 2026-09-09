@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    Sign Up Chimp Module
- * @version    1.8
+ * @version    1.9
  * @license    GNU General Public License version 2
  */
 
