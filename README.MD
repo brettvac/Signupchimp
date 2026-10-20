@@ -24,10 +24,7 @@ Once the module is visible on your site, visitors can now enter their email and 
 - **Inline and Modal Forms**. Display the signup form directly on the page or in a modal dialog triggered by a button.
 - **Custom Redirects**. Redirect subscribers to a specified menu item after a successful signup, with support for configurable query parameters and preservation of existing URL parameters.
 - **Dynamic Redirect Parameters**. Use tokens to insert module and page information into redirect query parameters, including module title, module name, module ID, page title, page description, and page URL.
-- **Meta Pixel and Conversions API Integration**. Send conversion events to Meta using the Conversions API, with configurable Dataset ID, access token, Graph API version, and event name.
-- **Custom Conversion Event Data**. Configure additional event data, including automatic page title and page URL values, alongside module information that is included automatically.
-- **ViewContent Tracking**. Optionally send a `ViewContent` event when the signup form is viewed, provided Meta tracking is enabled.
-- **Conversions API Testing**. Configure a Meta test event code to verify conversion events in the Meta Events Manager.
+- **Meta Conversions API Integration**. Send conversion events to Meta using the Conversions API, with configurable Dataset ID, access token, Graph API version, and event name.
 - **English and French Language Support**. Includes translated language strings for the module configuration and Meta conversion event options.
 
 ## Sign Up Chimp Requirements
