@@ -1,8 +1,9 @@
 <?php
 /**
- * @package      Sign Up Chimp Module
- * @version      1.9
- * @license      GNU General Public License version 2
+ * @package     Joomla.Site
+ * @subpackage  mod_signupchimp
+ * @version     2.0
+ * @license     GNU General Public License version 2
  */
 
 namespace Naftee\Module\Signupchimp\Site\Field;

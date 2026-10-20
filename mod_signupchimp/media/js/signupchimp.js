@@ -1,13 +1,13 @@
 /**
- * @package    Sign Up Chimp Module
- * @version    1.9
- * @license    GNU General Public License version 2
+ * @package     Joomla.Site
+ * @subpackage  mod_signupchimp
+ * @version     2.0
+ * @license     GNU General Public License version 2
  */
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Find and select all forms with name 'signupchimp' 
+    // Find and select all forms with name 'signupchimp'
     const forms = document.querySelectorAll('form[name="signupchimp"]');
-    
+
     // Attach a 'submit event' listener to each signupchimp form
     forms.forEach((form) => {
         form.addEventListener('submit', (event) => {
@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleSignupSubmit(form) {
     // Get moduleId from the form's data attribute
     const moduleId = form.dataset.scModuleId;
-    
+
     // Retrieve options specifically for this module instance via addScriptOptions
     const options = Joomla.getOptions('mod_signupchimp.' + moduleId);
-    
+
     const scResultDiv = document.getElementById('sc_result' + moduleId);
 
     // Display "adding to list" message
@@ -31,6 +31,11 @@ function handleSignupSubmit(form) {
 
     // Get form data
     const formData = new FormData(form);
+
+    // Pass the page where the signup occurred to the server.
+    // Meta CAPI uses this as event_source_url.
+    formData.append('event_source_url', window.location.href);
+
     const data = new URLSearchParams(formData).toString();
 
     // Send AJAX request using Joomla.request
@@ -41,17 +46,15 @@ function handleSignupSubmit(form) {
         processData: false,
         onSuccess: function(data) {
             const response = JSON.parse(data);
-            
+
             // Display the success message after adding to the list
             scResultDiv.innerHTML = ''; // Clear the "adding to list" message
-
             const divElement = document.createElement('div');
             divElement.className = options.successClass;
             divElement.setAttribute('role', 'alert');
             divElement.textContent = response.data; // Use response.data for success message
-
             scResultDiv.appendChild(divElement);
-            
+
             // Handle redirect if enabled
             if (options.redirect === 1) {
                 const menuItemIdAfterSubscribe = options.menuItemId;
@@ -81,14 +84,12 @@ function handleSignupSubmit(form) {
         onError: function(xhr) {
             // Get the error message, including from Mailchimp
             const response = JSON.parse(xhr.response);
-            
-            scResultDiv.innerHTML = ''; // Clear any existing content in sc_resultDiv before appending new content
 
+            scResultDiv.innerHTML = ''; // Clear any existing content in sc_resultDiv before appending new content
             const divElement = document.createElement('div');
             divElement.className = options.failureClass;
             divElement.setAttribute('role', 'alert');
             divElement.textContent = response.message;
-
             scResultDiv.appendChild(divElement);
         }
     });

@@ -1,7 +1,9 @@
 <?php
 /**
- * @package    Sign Up Chimp Module
- * @license    GNU General Public License version 2
+ * @package     Joomla.Site
+ * @subpackage  mod_signupchimp
+ * @version     2.0
+ * @license     GNU General Public License version 2
  */
 
 \defined('_JEXEC') or die;

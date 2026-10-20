@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="module" client="site" method="upgrade">
     <name>MOD_SIGNUPCHIMP</name>
-    <version>1.9</version>
+    <version>2.0</version>
     <description>MOD_SIGNUPCHIMP_DESC</description>
     <author>Brett Vachon</author>
     <creationDate>2025-02-14</creationDate>
     <copyright>(C) 2025 - 2026 Brett Vachon</copyright>
-    <license>GNU General Public License version 2</license>
-    
+    <license>GNU General Public License version 2</license> 
     <namespace path="src">Naftee\Module\Signupchimp</namespace>
-
-    <scriptfile>script.php</scriptfile>
-    
+    <scriptfile>script.php</scriptfile>   
     <files>
         <folder module="mod_signupchimp">services</folder>
         <folder>lib</folder>
         <folder>src</folder>
         <folder>tmpl</folder>
-    </files>
-    
+    </files>    
     <languages folder="language">
         <language tag="en-GB">en-GB/mod_signupchimp.ini</language>
         <language tag="en-GB">en-GB/mod_signupchimp.sys.ini</language>
         <language tag="fr-FR">fr-FR/mod_signupchimp.ini</language>
         <language tag="fr-FR">fr-FR/mod_signupchimp.sys.ini</language>
-    </languages>
-    
+    </languages>  
     <media destination="mod_signupchimp" folder="media">
       <folder>js</folder>
       <folder>css</folder>
       <filename>joomla.asset.json</filename>
-   </media>
-    
+   </media> 
    <config>
       <fields name="params" addfieldprefix="Naftee\Module\Signupchimp\Site\Field">
           <fieldset name="basic">
@@ -58,7 +52,7 @@
                   <option value="5000">5</option>
               </field>
           </fieldset>         
-          <fieldset name="styles" label="MOD_SIGNUPCHIMP_STYLES_LABEL" description="MOD_SIGNUPCHIMP_STYLES_DESC">
+          <fieldset name="classes" label="MOD_SIGNUPCHIMP_CLASSES_LABEL" description="MOD_SIGNUPCHIMP_CLASSES_DESC">
               <field name="emailclass" type="text" default="form-control" label="MOD_SIGNUPCHIMP_EMAIL_FIELD_CLASS_LABEL" description="MOD_SIGNUPCHIMP_EMAIL_FIELD_CLASS_DESC" />
               <field name="fnameclass" type="text" default="form-control" label="MOD_SIGNUPCHIMP_FIRST_NAME_FIELD_CLASS_LABEL" description="MOD_SIGNUPCHIMP_FIRST_NAME_FIELD_CLASS_DESC" />
               <field name="gdprclass" type="text" default="small" label="MOD_SIGNUPCHIMP_GDPR_CLASS_LABEL" description="MOD_SIGNUPCHIMP_GDPR_CLASS_DESC" />
@@ -66,9 +60,27 @@
               <field name="successmsgclass" type="text" default="alert alert-success" label="MOD_SIGNUPCHIMP_SUCCESS_MESSAGE_CLASS_LABEL" description="MOD_SIGNUPCHIMP_SUCCESS_MESSAGE_CLASS_DESC" />
               <field name="failuremsgclass" type="text" default="alert alert-danger" label="MOD_SIGNUPCHIMP_FAILURE_MESSAGE_CLASS_LABEL" description="MOD_SIGNUPCHIMP_FAILURE_MESSAGE_CLASS_DESC" />
           </fieldset>
+          <fieldset name="meta" label="MOD_SIGNUPCHIMP_META_LABEL" description="MOD_SIGNUPCHIMP_META_DESC">
+              <field name="meta_enabled" type="radio" default="0" label="MOD_SIGNUPCHIMP_META_ENABLED_LABEL" description="MOD_SIGNUPCHIMP_META_ENABLED_DESC" layout="joomla.form.field.radio.switcher">
+                  <option value="0">JNO</option>
+                  <option value="1">JYES</option>
+              </field>
+              <field name="meta_dataset_id" type="text" default="" label="MOD_SIGNUPCHIMP_META_DATASET_ID_LABEL" description="MOD_SIGNUPCHIMP_META_DATASET_ID_DESC" showon="meta_enabled:1" />
+              <field name="meta_access_token" type="password" default="" label="MOD_SIGNUPCHIMP_META_ACCESS_TOKEN_LABEL" description="MOD_SIGNUPCHIMP_META_ACCESS_TOKEN_DESC" showon="meta_enabled:1" size="250" maxlength="512" />
+              <field name="meta_graph_api" type="text" default="v24.0" label="MOD_SIGNUPCHIMP_META_GRAPH_API_LABEL" description="MOD_SIGNUPCHIMP_META_GRAPH_API_DESC" showon="meta_enabled:1" />
+              <field name="meta_event_name" type="list" default="Lead" label="MOD_SIGNUPCHIMP_META_EVENT_LABEL" description="MOD_SIGNUPCHIMP_META_EVENT_DESC" showon="meta_enabled:1">
+                  <option value="Lead">MOD_SIGNUPCHIMP_META_EVENT_LEAD</option>
+                  <option value="CompleteRegistration">MOD_SIGNUPCHIMP_META_EVENT_COMPLETE_REGISTRATION</option>
+              </field>
+              <field name="meta_event_data" type="text" default="" label="MOD_SIGNUPCHIMP_META_EVENT_DATA_LABEL" description="MOD_SIGNUPCHIMP_META_EVENT_DATA_DESC" showon="meta_enabled:1" />
+              <field name="meta_send_viewcontent" type="radio" default="1" label="MOD_SIGNUPCHIMP_META_SEND_VIEWCONTENT_LABEL" description="MOD_SIGNUPCHIMP_META_SEND_VIEWCONTENT_DESC" layout="joomla.form.field.radio.switcher" showon="meta_enabled:1">
+                  <option value="0">JNO</option>
+                  <option value="1">JYES</option>
+              </field>
+              <field name="meta_test_event_code" type="text" default="" label="MOD_SIGNUPCHIMP_META_TEST_EVENT_CODE_LABEL" description="MOD_SIGNUPCHIMP_META_TEST_EVENT_CODE_DESC" showon="meta_enabled:1" />
+          </fieldset>
       </fields>
-    </config>
-   
+    </config> 
     <changelogurl>https://raw.githubusercontent.com/brettvac/signupchimp/refs/heads/main/update/changelog.xml</changelogurl>   
     <updateservers>
         <server type="extension" name="Sign Up Chimp Updates">https://raw.githubusercontent.com/brettvac/signupchimp/refs/heads/main/update/updates.xml</server>
