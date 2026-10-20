@@ -13,15 +13,22 @@ Sign Up Chimp is your first step to turning a sedentary website visitor who stum
 1. Install the module via the Joomla! Extensions Manager. You can install via URL by using this URL: [https://github.com/brettvac/signupchimp/releases/latest/download/mod_signupchimp.zip](https://github.com/brettvac/signupchimp/releases/latest/download/mod_signupchimp.zip)  
 2. Navigate to Content > Site Modules (or just click the modules button from the dashboard) to start editing the Sign Up Chimp module.
 3. Configure the module settings, starting with your MailChimp API key. The list field will populate automatically when you save the module. 
-4. If you want to display a tripwire offer, set the menu item and the delay before redirect option will appear.
-5. Publish the module in your desired position. 
+4. Publish the module in your desired position. 
 
 Once the module is visible on your site, visitors can now enter their email and first name to subscribe to your mailing list directly from your website.
 
 ## Sign Up Chimp Features
-- **AJAX Signup**. Sign Up Chimp uses an AJAX-powered form to send data to MailChimp without reloading the page, allowing your user to stay on the page after submitting the form. 
-- **Custom CSS Classes**. You can stylize your form to your heart's content by adding classes to the form elements directly in the module configuration.
-- **Multiple Forms**. You can also publish multiple Sign Up Chimp modules on the same page, for example in the top or bottom positions of your template.
+- **AJAX Signup**. Sign Up Chimp uses an AJAX-powered form to send data to Mailchimp without reloading the page, allowing your users to stay on the page after submitting the form.
+- **Custom CSS Classes**. Style your form to your heart's content by adding classes to the form elements directly in the module configuration.
+- **Multiple Forms**. Publish multiple Sign Up Chimp modules on the same page, for example, in the top or bottom positions of your template.
+- **Inline and Modal Forms**. Display the signup form directly on the page or in a modal dialog triggered by a button.
+- **Custom Redirects**. Redirect subscribers to a specified menu item after a successful signup, with support for configurable query parameters and preservation of existing URL parameters.
+- **Dynamic Redirect Parameters**. Use tokens to insert module and page information into redirect query parameters, including module title, module name, module ID, page title, page description, and page URL.
+- **Meta Pixel and Conversions API Integration**. Send conversion events to Meta using the Conversions API, with configurable Dataset ID, access token, Graph API version, and event name.
+- **Custom Conversion Event Data**. Configure additional event data, including automatic page title and page URL values, alongside module information that is included automatically.
+- **ViewContent Tracking**. Optionally send a `ViewContent` event when the signup form is viewed, provided Meta tracking is enabled.
+- **Conversions API Testing**. Configure a Meta test event code to verify conversion events in the Meta Events Manager.
+- **English and French Language Support**. Includes translated language strings for the module configuration and Meta conversion event options.
 
 ## Sign Up Chimp Requirements
 The Sign Up Chimp module works with Joomla! versions greater than 4.4 and requires PHP 7.2.5 or later. 
