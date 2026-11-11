@@ -3,6 +3,38 @@
     <changelog>
         <element>mod_signupchimp</element>
         <type>module</type>
+        <version>2.1</version>
+        <fix>
+            <item>Updated the Mailchimp API helper to handle empty, non-array, and invalid JSON responses without causing PHP type errors.</item>
+            <item>Corrected API response handling so successful HTTP responses that do not contain an array payload are reported using the request success status.</item>
+            <item>Improved exception handling during Mailchimp client initialization and list retrieval by catching PHP errors and other throwable exceptions.</item>
+            <item>Prevented attempts to access list data when the Mailchimp API response is not an array.</item>
+            <item>Removed unused imports and variables from the helper and custom list field.</item>
+        </fix>
+        <addition>
+            <item>Added a dedicated MailchimpHelper.php file to replace the third-party DrewM MailChimp API library.</item>
+            <item>Implemented Mailchimp API requests using Joomla!'s HttpFactory and HTTP client infrastructure.</item>
+            <item>Added support for the Mailchimp API operations used by the module, including GET, POST, PUT, PATCH, and DELETE requests.</item>
+            <item>Implemented API authentication, request headers, JSON request bodies, response handling, error reporting, and pagination link parsing in the new helper.</item>
+            <item>Added a subscriber hash method to the new helper to replace the corresponding DrewM library functionality.</item>
+            <item>Made Meta Conversions API logging consistent across ViewContent and conversion events.</item>
+            <item>Made missing Meta API configuration warnings conditional on Joomla debug mode, preventing logging when debug is disabled.</item>
+        </addition>
+        <change>
+            <item>Updated the module's helper and custom list field to use the new MailchimpHelper instead of the DrewM library.</item>
+            <item>Removed the DrewM library from the module package and its associated loading requirements.</item>
+            <item>Raised the minimum supported Joomla! version to 5.0.0 and the minimum supported PHP version to 8.1.0, dropping Joomla! 4 compatibility.</item>
+            <item>Updated the installer script to enforce the new minimum Joomla! and PHP versions.</item>
+            <item>Updated the module to version 2.1.</item>
+            <item>Removed the Meta Graph API version from module configuration and hardcoded the latest version (v27.0) in MetaCapiHelper.</item>
+        </change>
+        <language>
+          <item>Removed the obsolete Meta Graph API version configuration language strings (MOD_SIGNUPCHIMP_META_GRAPH_API_LABEL and MOD_SIGNUPCHIMP_META_GRAPH_API_DESC) from the English and French language files.</item>
+        </language>
+    </changelog>
+    <changelog>
+        <element>mod_signupchimp</element>
+        <type>module</type>
         <version>2.0</version>
         <fix>
             <item>Removed unnecessary spaces inside the changelog XML to ensure it is parsed correctly by Joomla!</item>
@@ -13,7 +45,7 @@
             <item>Cleaned up PHP code formatting and clarified comments for improved readability and maintainability.</item>
         </fix>
         <addition>
-            <item>Added Meta Pixel and Conversions API (cAPI) configuration options, including Dataset ID, Access Token, Graph API version, signup event name, and custom event data.</item>
+            <item>Added Meta Conversions API (cAPI) configuration options, including Dataset ID, Access Token, Graph API version, signup event name, and custom event data.</item>
             <item>Added automatic inclusion of page title and page URL in custom event data, alongside module information sent automatically with conversion events.</item>
             <item>Added a configuration field for the Meta Conversions API test event code to simplify event testing.</item>
             <item>Added new English and French language strings for Meta Conversions API configuration, including the use of Dataset ID terminology and translated conversion event names.</item>

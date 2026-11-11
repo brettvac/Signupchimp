@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Site
  * @subpackage  mod_signupchimp
- * @version     2.0
+ * @version     2.1
  * @license     GNU General Public License version 2
  */
 
@@ -13,16 +13,10 @@ namespace Naftee\Module\Signupchimp\Site\Helper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Helper\ModuleHelper;
-use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
-
-// Mailchimp library
-use DrewM\MailChimp\MailChimp;
-
-require_once __DIR__ . '/../../lib/MailChimp.php';
 
 /**
  * Helper class for the Sign Up Chimp module.
@@ -45,18 +39,37 @@ class SignupchimpHelper
 	 * Check whether the email address already exists in the list.
 	 *
 	 * @return  bool
+	 *
+	 * @throws  \Exception  If the API request fails for a reason other than 404
 	 */
-	protected function checkEmailExists()
+	protected function checkEmailExists(): bool
 	{
-		$subscriberHash = $this->MChimp::subscriberHash($this->emailAddress);
-		$result = $this->MChimp->get("lists/{$this->listID}/members/{$subscriberHash}");
+		$subscriberHash = MailchimpHelper::subscriberHash($this->emailAddress);
 
-		if (!$this->MChimp->success() && defined('JDEBUG') && JDEBUG)
+		$this->MChimp->get("lists/{$this->listID}/members/{$subscriberHash}");
+
+		if ($this->MChimp->success())
 		{
-			Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+			return true;
 		}
 
-		return $this->MChimp->success();
+		$response = $this->MChimp->getLastResponse();
+		$statusCode = $response['headers']['http_code'] ?? 0;
+
+		// A 404 means the contact does not exist.
+		if ($statusCode === 404)
+		{
+			return false;
+		}
+
+		$error = $this->MChimp->getLastError() ?: 'Unknown Mailchimp API error.';
+
+		if (defined('JDEBUG') && JDEBUG)
+		{
+			Log::add($error, Log::DEBUG, 'mod_signupchimp');
+		}
+
+		throw new \Exception($error);
 	}
 
 	/**
@@ -66,7 +79,7 @@ class SignupchimpHelper
 	 *
 	 * @throws  \Exception
 	 */
-	protected function subscribeUser()
+	protected function subscribeUser(): string
 	{
 		$data = [
 			'email_address' => $this->emailAddress,
@@ -75,7 +88,7 @@ class SignupchimpHelper
 			'tags'          => $this->tags
 		];
 
-		$result = $this->MChimp->post("lists/{$this->listID}/members", $data);
+		$this->MChimp->post("lists/{$this->listID}/members", $data);
 
 		if ($this->MChimp->success())
 		{
@@ -84,12 +97,14 @@ class SignupchimpHelper
 			return $this->successMsg;
 		}
 
+		$error = $this->MChimp->getLastError() ?: 'Unknown Mailchimp API error.';
+
 		if (defined('JDEBUG') && JDEBUG)
 		{
-			Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+			Log::add($error, Log::DEBUG, 'mod_signupchimp');
 		}
 
-		throw new \Exception($this->MChimp->getLastError());
+		throw new \Exception($error);
 	}
 
 	/**
@@ -99,46 +114,53 @@ class SignupchimpHelper
 	 *
 	 * @throws  \Exception
 	 */
-	protected function updateUser()
+	protected function updateUser(): string
 	{
-		$subscriberHash = $this->MChimp::subscriberHash($this->emailAddress);
+		$subscriberHash = MailchimpHelper::subscriberHash($this->emailAddress);
 
-		// Get the current user
+		// Get the current user.
 		$current = $this->MChimp->get("lists/{$this->listID}/members/{$subscriberHash}");
 
-		if (!$this->MChimp->success() && defined('JDEBUG') && JDEBUG)
+		if (!$this->MChimp->success() || !is_array($current))
 		{
-			Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+			$error = $this->MChimp->getLastError() ?: 'Unable to retrieve the existing Mailchimp contact.';
+
+			if (defined('JDEBUG') && JDEBUG)
+			{
+				Log::add($error, Log::DEBUG, 'mod_signupchimp');
+			}
+
+			throw new \Exception($error);
 		}
 
-		// Initialize array with first names and tags
+		// Initialize array with first names and tags.
 		$data = [
 			'merge_fields' => ['FNAME' => $this->fname],
 			'tags'         => $this->tags
 		];
 
-		// Determine the contact status to set based on existing status
+		// Determine the contact status to set based on existing status.
 		switch ($current['status'] ?? '')
 		{
 			case 'subscribed':
 			case 'cleaned':
 			case 'pending':
-				// Keep the same status for subscribed, cleaned or pending contacts
+				// Keep the same status for subscribed, cleaned or pending contacts.
 				break;
 
 			case 'unsubscribed':
-				// Set status to pending for unsubscribed contacts
+				// Set status to pending for unsubscribed contacts.
 				$data['status'] = 'pending';
 				break;
 
 			default:
-				// Set contact status to subscribed if no status previously set
+				// Set contact status to subscribed if no status previously set.
 				$data['status'] = 'subscribed';
 				break;
 		}
 
-		// Update the user (with new status if set)
-		$result = $this->MChimp->patch("lists/{$this->listID}/members/{$subscriberHash}", $data);
+		// Update the user (with new status if set).
+		$this->MChimp->patch("lists/{$this->listID}/members/{$subscriberHash}", $data);
 
 		if ($this->MChimp->success())
 		{
@@ -147,13 +169,15 @@ class SignupchimpHelper
 			return $this->successMsg;
 		}
 
-		// Log and display the error message upon failure
+		// Log and display the error message upon failure.
+		$error = $this->MChimp->getLastError() ?: 'Unknown Mailchimp API error.';
+
 		if (defined('JDEBUG') && JDEBUG)
 		{
-			Log::add($this->MChimp->getLastError(), Log::DEBUG, 'mod_signupchimp');
+			Log::add($error, Log::DEBUG, 'mod_signupchimp');
 		}
 
-		throw new \Exception($this->MChimp->getLastError());
+		throw new \Exception($error);
 	}
 
 	/**
@@ -165,7 +189,7 @@ class SignupchimpHelper
 	 *
 	 * @since   2.0
 	 */
-	protected function sendMetaConversion()
+	protected function sendMetaConversion(): void
 	{
 		// Meta tracking must be explicitly enabled.
 		if ((int) $this->params->get('meta_enabled', 0) !== 1)
@@ -174,31 +198,30 @@ class SignupchimpHelper
 		}
 
 		try
-    {
-        MetaCapiHelper::sendConversion(
-            (int) $this->moduleId,
-            $this->eventSourceUrl,
-            $this->emailAddress,
-            trim($this->params->get('meta_dataset_id', '')),
-            trim($this->params->get('meta_access_token', '')),
-            trim($this->params->get('meta_event_name', '')),
-            trim($this->params->get('meta_graph_api', '')),
-            trim($this->params->get('meta_event_data', '')),
-            trim($this->params->get('meta_test_event_code', ''))
-        );
-    }
-    catch (\Throwable $e)
-    {
-        // Conversion tracking must never break the signup flow.
-        if (defined('JDEBUG') && JDEBUG)
-        {
-            Log::add(
-                'Meta CAPI failure: ' . $e->getMessage(),
-                Log::DEBUG,
-                'mod_signupchimp'
-            );
-        }
-    }
+		{
+			MetaCapiHelper::sendConversion(
+				(int) $this->moduleId,
+				$this->eventSourceUrl,
+				$this->emailAddress,
+				trim($this->params->get('meta_dataset_id', '')),
+				trim($this->params->get('meta_access_token', '')),
+				trim($this->params->get('meta_event_name', '')),
+				trim($this->params->get('meta_event_data', '')),
+				trim($this->params->get('meta_test_event_code', ''))
+			);
+		}
+		catch (\Throwable $e)
+		{
+			// Conversion tracking must never break the signup flow.
+			if (defined('JDEBUG') && JDEBUG)
+			{
+				Log::add(
+					'Meta CAPI failure: ' . $e->getMessage(),
+					Log::DEBUG,
+					'mod_signupchimp'
+				);
+			}
+		}
 	}
 
 	/**
@@ -210,44 +233,47 @@ class SignupchimpHelper
 	 *
 	 * @throws  \Exception  If the module cannot be loaded or is not enabled
 	 */
-	protected function getParams($moduleId)
+	protected function getParams($moduleId): Registry
 	{
-		// Module ID must be a String, not an Integer
+		// Module ID must be a string, not an integer.
 		$moduleId = (string) $moduleId;
 
-		// Load the module by ID
+		// Load the module by ID.
 		$module = ModuleHelper::getModuleById($moduleId);
 
-		// Check if the module is enabled, assigned to current menu item or all items, and accessible by the user
+		// Check if the module is enabled.
 		if (!ModuleHelper::isEnabled($module->module))
 		{
-			throw new \Exception('[' . __METHOD__ . '] ' . Text::sprintf('COM_AJAX_MODULE_NOT_ACCESSIBLE', $moduleId));
+			throw new \Exception(
+				'[' . __METHOD__ . '] ' .
+				Text::sprintf('COM_AJAX_MODULE_NOT_ACCESSIBLE', $moduleId)
+			);
 		}
 
 		return new Registry($module->params);
 	}
 
 	/**
-	 * Handles AJAX requests for the module via com_ajax
+	 * Handles AJAX requests for the module via com_ajax.
 	 *
-	 * @return  string  Success message (JSON-encoded)
+	 * @return  string  Success message
 	 *
 	 * @throws  \Exception  On validation, API, or processing errors
 	 */
-	public function signupAjax()
+	public function signupAjax(): string
 	{
 		$app = Factory::getApplication();
 
-		// Get the submitted form values (retrieved as POST data)
+		// Get the submitted form values (retrieved as POST data).
 		$input = $app->getInput();
 
-		// Check CSRF token
+		// Check CSRF token.
 		if (!Session::checkToken())
 		{
 			throw new \Exception(Text::_('JINVALID_TOKEN'));
 		}
 
-		// Check honeypot
+		// Check honeypot.
 		$honeypot = $input->getString('sc_website', '');
 
 		if (!empty($honeypot))
@@ -255,7 +281,7 @@ class SignupchimpHelper
 			throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_HONEYPOT_FILLED'));
 		}
 
-		// Get the module ID from the request
+		// Get the module ID from the request.
 		$moduleId = $input->getInt('moduleId', 0);
 
 		if (!$moduleId)
@@ -271,15 +297,12 @@ class SignupchimpHelper
 
 		$this->moduleId = $moduleId;
 
-		// Get module parameters
+		// Get module parameters.
 		$params       = $this->getParams($moduleId);
 		$this->params = $params;
 
 		// Get the original page URL for Meta event_source_url.
-		$this->eventSourceUrl = $input->getString(
-			'event_source_url',
-			''
-		);
+		$this->eventSourceUrl = $input->getString('event_source_url', '');
 
 		if (
 			$this->eventSourceUrl === '' ||
@@ -293,45 +316,45 @@ class SignupchimpHelper
 		$this->listID   = $params->get('listid', '');
 		$tagsInput      = $params->get('tags', '');
 
-		// Load language file
+		// Load language file.
 		$language = $app->getLanguage();
 		$language->load('mod_signupchimp', JPATH_SITE);
 
-		// Get language strings
+		// Get language strings.
 		$this->successMsg = Text::_('MOD_SIGNUPCHIMP_MESSAGE_SUCCESS');
 
-		// Validate API key and list ID
+		// Validate API key and list ID.
 		if (empty($apiKey))
 		{
 			throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_NO_API_KEY'));
 		}
 
-		// Custom form sets a sentinel value of '-1' when the list field isn't populated
+		// Custom form sets a sentinel value of '-1' when the list field isn't populated.
 		if (empty($this->listID) || $this->listID == '-1')
 		{
 			throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_NO_LIST'));
 		}
 
-		// Initialize MailChimp
+		// Initialize Mailchimp.
 		try
 		{
-			$this->MChimp = new \DrewM\MailChimp\MailChimp($apiKey);
+			$this->MChimp = new MailchimpHelper($apiKey);
 		}
-		catch (\Exception $e)
+		catch (\Throwable $e)
 		{
 			if (defined('JDEBUG') && JDEBUG)
 			{
 				Log::add($e->getMessage(), Log::DEBUG, 'mod_signupchimp');
 			}
 
-			throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED'));
+			throw new \Exception(Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED'), 0, $e);
 		}
 
-		// Get form input
+		// Get form input.
 		$this->emailAddress = urldecode($input->get('email', '', 'RAW'));
 		$this->fname        = $input->getString('fname', '');
 
-		// Process tags
+		// Process tags.
 		$this->tags = [];
 
 		if (!empty($tagsInput))
@@ -349,14 +372,14 @@ class SignupchimpHelper
 			}
 		}
 
-		// Check if email exists as a contact
+		// Check if email exists as a contact.
 		if (!$this->checkEmailExists())
 		{
-			// User not found: subscribe new user
+			// User not found: subscribe new user.
 			return $this->subscribeUser();
 		}
 
-		// Existing contact (subscribed, unsubscribed, pending, etc.) update
+		// Existing contact (subscribed, unsubscribed, pending, etc.) update.
 		return $this->updateUser();
 	}
 }

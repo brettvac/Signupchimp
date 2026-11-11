@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Site
  * @subpackage  mod_signupchimp
- * @version     2.0
+ * @version     2.1
  * @license     GNU General Public License version 2
  */
 
@@ -15,75 +15,112 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
-
-use DrewM\MailChimp\MailChimp;
-
-require_once __DIR__ . '/../../lib/MailChimp.php';
+use Naftee\Module\Signupchimp\Site\Helper\MailchimpHelper;
 
 /**
- * Form element to retrieve and display Mailchimp Lists (audiences) automatically in the module configuration when API key is provided
+ * Form element to retrieve and display Mailchimp Lists (audiences)
+ * automatically in the module configuration when an API key is provided.
  *
  * @since  1.6
  */
 class MailchimplistsField extends ListField
 {
-    protected $type = 'mailchimplists';
+	protected $type = 'mailchimplists';
 
-    protected function getOptions()
-    {
-        $options = [];
-        $app = Factory::getApplication();
-        $input = $app->getInput();
+	/**
+	 * Get the available Mailchimp lists as field options.
+	 *
+	 * @return  array
+	 */
+	protected function getOptions(): array
+	{
+		$options = [];
+		$app = Factory::getApplication();
 
-        // Retrieve the API key from the 'params' field group.
-        $apiKey = $this->form->getValue('apikey', 'params');
+		// Retrieve the API key from the 'params' field group.
+		$apiKey = $this->form->getValue('apikey', 'params');
 
-        // Handle Empty API Key first
-        if (empty($apiKey)) {
-            $fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
-            $options[] = HTMLHelper::_('select.option', '-1', Text::alt('MOD_SIGNUPCHIMP_PROVIDE_API_KEY', $fieldname));
-            
-            return array_merge(parent::getOptions(), $options);
-        }
+		// Handle an empty API key first.
+		if (empty($apiKey))
+		{
+			$fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
 
-        $MChimp = null;
-        try {
-            $MChimp = new \DrewM\MailChimp\MailChimp($apiKey);
-        } catch (\Exception $e) {
-            if (defined('JDEBUG') && JDEBUG) {
-                Log::add($e->getMessage(), Log::DEBUG, 'mod_signupchimp');
-            }
-            
-            $options[] = HTMLHelper::_('select.option', '-1', Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED'));
-            
-            return array_merge(parent::getOptions(), $options);
-        }
+			$options[] = HTMLHelper::_(
+				'select.option',
+				'-1',
+				Text::alt('MOD_SIGNUPCHIMP_PROVIDE_API_KEY', $fieldname)
+			);
 
-        // Fetch available lists using the API
-        $result = $MChimp->get('lists');
+			return array_merge(parent::getOptions(), $options);
+		}
 
-        if ($MChimp->success()) {
-            if (!empty($result['lists'])) {
-                foreach ($result['lists'] as $list) {
-                    $options[] = HTMLHelper::_('select.option', 
-                      $list['id'],       // The unique ID for the list
-                      $list['name']);    // The name of the list displayed to the user
-                }
-            } else {
-                $options[] = HTMLHelper::_('select.option', '-1', Text::_('MOD_SIGNUPCHIMP_NO_LISTS_FOUND'));
-            }
-        } else {
-            $error = $MChimp->getLastError();
-            
-            if (defined('JDEBUG') && JDEBUG) {
-                Log::add($error, Log::DEBUG, 'mod_signupchimp');
-            }
-            
-            $app->enqueueMessage(sprintf(Text::_('MOD_SIGNUPCHIMP_API_ERROR'), $error), 'error');
-            $options[] = HTMLHelper::_('select.option', '-1', Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED'));
-        }
+		// Initialize Mailchimp.
+		try
+		{
+			$MChimp = new MailchimpHelper($apiKey);
+		}
+		catch (\Throwable $e)
+		{
+			if (defined('JDEBUG') && JDEBUG)
+			{
+				Log::add($e->getMessage(), Log::DEBUG, 'mod_signupchimp');
+			}
 
-        $options = array_merge(parent::getOptions(), $options);
-        return $options;
-    }
+			$options[] = HTMLHelper::_(
+				'select.option',
+				'-1',
+				Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED')
+			);
+
+			return array_merge(parent::getOptions(), $options);
+		}
+
+		// Fetch available lists using the API.
+		$result = $MChimp->get('lists');
+
+		if ($MChimp->success() && is_array($result))
+		{
+			if (!empty($result['lists']))
+			{
+				foreach ($result['lists'] as $list)
+				{
+					$options[] = HTMLHelper::_(
+						'select.option',
+						$list['id'],
+						$list['name']
+					);
+				}
+			}
+			else
+			{
+				$options[] = HTMLHelper::_(
+					'select.option',
+					'-1',
+					Text::_('MOD_SIGNUPCHIMP_NO_LISTS_FOUND')
+				);
+			}
+		}
+		else
+		{
+			$error = $MChimp->getLastError() ?: 'Unknown Mailchimp API error.';
+
+			if (defined('JDEBUG') && JDEBUG)
+			{
+				Log::add($error, Log::DEBUG, 'mod_signupchimp');
+			}
+
+			$app->enqueueMessage(
+				sprintf(Text::_('MOD_SIGNUPCHIMP_API_ERROR'), $error),
+				'error'
+			);
+
+			$options[] = HTMLHelper::_(
+				'select.option',
+				'-1',
+				Text::_('MOD_SIGNUPCHIMP_ERROR_INIT_FAILED')
+			);
+		}
+
+		return array_merge(parent::getOptions(), $options);
+	}
 }

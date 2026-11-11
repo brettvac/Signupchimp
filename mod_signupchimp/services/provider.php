@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Site
  * @subpackage  mod_signupchimp
- * @version     2.0
+ * @version     2.1
  * @license     GNU General Public License version 2
  */
 

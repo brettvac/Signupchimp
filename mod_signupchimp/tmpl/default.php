@@ -2,7 +2,7 @@
 /**
  * @package     Joomla.Administrator
  * @subpackage  mod_signupchimp
- * @version     2.0
+ * @version     2.1
  * @license     GNU General Public License version 2
  */
 \defined('_JEXEC') or die;
@@ -45,9 +45,8 @@ if ((int) $params->get('meta_enabled', 0) === 1 && (int) $params->get('meta_send
 {
     $metaDatasetId     = trim((string) $params->get('meta_dataset_id', ''));
     $metaAccessToken   = trim((string) $params->get('meta_access_token', ''));
-    $metaGraphApi      = trim((string) $params->get('meta_graph_api', 'v24.0'));
     $metaTestEventCode = trim((string) $params->get('meta_test_event_code', ''));
-	  MetaCapiHelper::sendViewContent($metaDatasetId, $metaAccessToken, $metaGraphApi, $metaTestEventCode, $moduleId);
+	  MetaCapiHelper::sendViewContent($metaDatasetId, $metaAccessToken, $metaTestEventCode, $moduleId);
 }
 
 // Get redirect query parameters
